@@ -244,52 +244,74 @@ body.theme-dark .logo-box {
     overflow: hidden;
     color: #fff;
     font-family: 'Archivo Black', sans-serif;
-    perspective: 1000px; /* Enable 3D space */
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .name-reveal-bg-pattern {
+    display: none; /* Video doesn't have the grid */
+}
+
+/* Global section fade to ground the bottom text reveal */
+.name-reveal-section::after {
+    content: '';
     position: absolute;
-    inset: 0;
+    bottom: 0;
+    left: 0;
     width: 100%;
-    height: 100%;
-    background-image: 
-        linear-gradient(to right, rgba(255, 255, 255, 0.08) 1px, transparent 1px), 
-        linear-gradient(to bottom, rgba(255, 255, 255, 0.08) 1px, transparent 1px);
-    background-size: 32px 32px;
-    mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
-    -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
+    height: 15vh;
+    background: linear-gradient(to top, #000 0%, transparent 100%);
     pointer-events: none;
-    z-index: 0; /* Keep it securely in the background */
+    z-index: 10;
+}
+
+.name-text-mask {
+    position: absolute;
+    width: 100%;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 5; /* Text on top of image as per video */
+}
+
+.top-text-mask {
+    top: 15vh; /* Lifted up by 5% from 20vh */
+    height: 20vh;
+    display: flex;
+    align-items: flex-end;
+    z-index: 1;
+}
+
+.bottom-text-mask {
+    bottom: 8vh; /* Final 2% nudge down from 10vh */
+    height: 15vh; /* Tighter mask to guarantee total hide at 100% offset */
+    display: flex;
+    align-items: flex-end; /* Text rises UP from the background */
+    overflow: hidden;
 }
 
 .name-bg-text {
-    position: absolute;
     width: 100%;
     text-align: center;
-    z-index: 1;
     white-space: nowrap;
-    letter-spacing: -2px;
+    letter-spacing: -2px; /* Adjusted for smaller font size */
     display: flex;
     justify-content: center;
-    color: #fcfbf9; /* Warm off-white */
-    text-shadow: 
-        0 40px 60px rgba(159, 199, 255, 0.4),  /* Intense bottom icy blue glow (#9fc7ff) */
-        0 -10px 20px rgba(159, 199, 255, 0.2), /* Soft top highlight */
-        0 15px 15px rgba(0, 0, 0, 0.9);      /* Core black drop shadow */
+    color: #fff;
+    text-shadow: none;
+    will-change: transform;
 }
 
 .name-bg-text.top-text {
-    top: 5vh;
-    font-size: clamp(3.2rem, 9.6vw, 12rem); /* Reduced 20% to make it stronger but smaller */
+    font-size: clamp(3rem, 11vw, 12rem);
     text-transform: uppercase;
-    width: 100%; 
-    letter-spacing: -2px;
+    line-height: 0.8;
 }
 
 .name-bg-text.bottom-text {
-    bottom: -3vh; /* Shifted down */
-    font-size: clamp(5rem, 12vw, 12rem);
-    z-index: 4; /* Brings Devops Engineer to the front of the image */
+    font-size: clamp(2rem, 7vw, 7.5rem); /* Reduced 40% more than top */
+    text-transform: uppercase;
+    line-height: 0.8;
 }
 
 .name-bg-text span {
@@ -298,32 +320,31 @@ body.theme-dark .logo-box {
 
 .name-reveal-image-container {
     position: absolute;
-    bottom: 0;
-    width: 100%;
-    height: 85vh;
-    display: flex;
-    justify-content: center;
-    align-items: flex-end;
+    top: 75%; /* Shifted down by 10% from 65% */
+    left: 50%;
+    transform: translate(-50%, -50%);
     z-index: 2;
-    pointer-events: none;
-}
-
-.name-reveal-image-container::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 30vh;
-    background: linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 100%);
-    pointer-events: none;
+    width: auto;
+    height: 95vh;
 }
 
 .name-image {
     height: 100%;
     width: auto;
     object-fit: contain;
+    filter: drop-shadow(0 0 50px rgba(0,0,0,1));
     transform-origin: bottom center;
+}
+
+.name-reveal-image-container::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 100%;
+    height: 250px; /* Intense black fade below portrait as requested */
+    background: linear-gradient(to top, #000 20%, transparent 100%);
+    pointer-events: none;
 }
 
 /* Floating Texts */
@@ -334,47 +355,40 @@ body.theme-dark .logo-box {
     pointer-events: none;
 }
 
-.float-item {
-    position: absolute;
-    font-weight: 800;
-    letter-spacing: 1px;
-    color: #fcfbf9;
-    text-shadow: 
-        0 20px 40px rgba(159, 199, 255, 0.3),
-        0 5px 10px rgba(0, 0, 0, 0.9);
-}
+.float-1 { top: 75%; left: 15%; }
+.float-3 { top: 85%; left: 30%; }
+.float-5 { top: 85%; left: 65%; }
 
 .text-description {
-    top: 32%;
-    left: 58%;
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    font-size: 1.1rem;
-    font-weight: 800;
-    line-height: 1.5;
-    text-transform: none;
-    color: #9fc7ff; /* Crisp icy blue tone */
-    letter-spacing: 0;
-    max-width: 500px;
-    text-shadow: 0 10px 20px rgba(159, 199, 255, 0.15), 0 5px 5px rgba(0,0,0,0.8);
-}
-
-/* Specific styling for System Design and Scalable Infrastructure */
-.float-1, .float-3 {
-    color: #9fc7ff;
-    text-shadow: 
-        0 15px 30px rgba(159, 199, 255, 0.6),
-        0 5px 10px rgba(0, 0, 0, 0.9);
-}
-
-/* Fly past elements */
-.fly-item {
-    position: absolute;
-    font-weight: 800;
+    top: 55%; /* Moved down from 45% to clear huge typography */
+    left: 65%;
+    font-family: 'Inter', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1.2;
+    text-transform: uppercase;
+    color: #9fc7ff; /* Custom Technical Blue requested */
     letter-spacing: 1px;
-    color: #fcfbf9;
-    font-family: 'Archivo Black', sans-serif;
-    text-shadow: 0 15px 30px rgba(159, 199, 255, 0.4), 0 5px 10px rgba(0,0,0,0.9);
-    z-index: 4;
+    max-width: 320px;
+}
+
+/* Floating labels like STRATEGY, CONCEPT */
+.float-item {
+    position: absolute;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: #fff; /* Default to white unless overridden */
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    opacity: 0.8;
+}
+
+.float-1 { top: 65%; left: 30%; }
+.float-3 { top: 75%; left: 65%; }
+.float-5 { top: 55%; left: 75%; }
+
+.fly-item {
+    display: none; /* Video doesn't use the fly past items */
 }
 
 .fly-1 { top: 25%; left: 15%; font-size: 1.2rem; }
@@ -384,9 +398,12 @@ body.theme-dark .logo-box {
 .fly-5 { top: 20%; left: 60%; font-size: 1.2rem; }
 .fly-6 { top: 50%; left: 10%; font-size: 1.4rem; }
 
-.float-1 { top: 40%; left: 27%; font-size: 0.9rem; }
-.float-3 { top: 78%; left: 16%; font-size: 0.9rem; }
-.float-5 { top: 78%; left: 60%; font-size: 0.9rem; }
+.float-1 { top: 40%; left: 27%; font-size: 0.9rem; color: #9fc7ff; }
+.float-3 { top: 78%; left: 16%; font-size: 0.9rem; color: #fff; }
+.float-5 { top: 78%; left: 60%; font-size: 0.9rem; color: #fff; }
+/* NEW: Left side labels — DEVOPS ENGINEERING and AI AGENTS */
+.float-6 { top: 55%; left: 5%; font-size: 0.9rem; color: #fff; } /* DEVOPS ENGINEERING */
+.float-7 { top: 68%; left: 8%; font-size: 0.9rem; color: #9fc7ff; } /* AI AGENTS */
 
 
 /* About Section */

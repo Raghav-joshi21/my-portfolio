@@ -115,7 +115,7 @@ function initHeroScrollAnimation() {
             scrollTrigger: {
                 trigger: '#hero',
                 start: 'top top',
-                end: '+=220%',   // ~2 scrolls total
+                end: '+=160%',   // Reduced from 220% to tighten section transition after zoom
                 scrub: 0.8,
                 pin: true,
             },
@@ -161,7 +161,7 @@ function initHeroScrollAnimation() {
                 opacity: 1,
                 duration: 0.6,
                 ease: 'power3.in',
-            }, zoomAt + 0.2);
+            }, zoomAt + 0.1); // Slightly sooner
         }
     });
 }
@@ -182,120 +182,68 @@ function initNameRevealAnimation() {
         const imgContainer = section.querySelector('.name-reveal-image-container');
         const img = section.querySelector('.name-image');
         const floats = section.querySelectorAll('.float-item');
-        const flyItems = section.querySelectorAll('.fly-item');
+        const desc = section.querySelector('.text-description');
 
-        // Initial cinematic states for anti-gravity ascend
-        gsap.set(imgContainer, { opacity: 0 });
-        gsap.set(img, { scale: 0.85, y: 150 });
-        
-        // Deep underground state with heavy motion blur and backward tilt
-        const allText = [...topLetters, ...bottomLetters, ...floats];
-        gsap.set(allText, { 
-            opacity: 0, 
-            y: 350, 
-            scale: 0.9, 
-            z: -250, 
-            rotationX: 30, 
-            filter: 'blur(20px)',
-            transformPerspective: 1000
-        });
-
-        // Initialize fly past items (stars flying towards camera)
-        gsap.set(flyItems, {
-            opacity: 0,
-            scale: 0.1,
-            z: -2000,
-            filter: 'blur(15px)',
-            transformPerspective: 1000
-        });
+        // Initial cinematic states based on Monkey Talkie video
+        gsap.set(imgContainer, { scale: 0.7, yPercent: 40, opacity: 0 });
+        gsap.set(topLetters, { yPercent: 105 }); // Corrected: Hiding BELOW the mask to slide UP
+        gsap.set(bottomLetters, { yPercent: 105 }); // Hidden BELOW the mask to slide UP
+        gsap.set([floats, desc], { opacity: 0, y: 20 });
 
         const tl = gsap.timeline({
             scrollTrigger: {
                 trigger: '#name-reveal',
                 start: 'top top',
-                end: '+=500%', // Increased massively to accommodate the sequental phases
-                scrub: 1.2,
+                end: '+=300%',
+                scrub: 1,
                 pin: true,
             }
         });
 
-        // The intense anti-gravity ascent settings
-        const cinematicAscend = {
-            opacity: 1,
-            y: 0,
+        // 1. Image Rises and Scales (Must be done before text starts)
+        tl.to(imgContainer, {
             scale: 1,
-            z: 0,
-            rotationX: 0,
-            filter: 'blur(0px)',
-            duration: 2.5,
-            ease: 'expo.out'
-        };
-
-        // 1. Top Letters Ascend (Defying Gravity)
-        tl.to(topLetters, {
-            ...cinematicAscend,
-            stagger: 0.05
+            yPercent: 0,
+            opacity: 1,
+            duration: 1.5,
+            ease: "power2.out"
         }, "start");
 
-        // 2. Bring photo up exactly through the text
-        tl.to(imgContainer, {
-            opacity: 1,
-            duration: 1
-        }, "start+=0.5");
+        // 2. FIRST: RAGHAV JOSHI Reveal (Starts only once image is up)
+        tl.to(topLetters, {
+            yPercent: 0,
+            stagger: {
+                each: 0.05,
+                from: "start"
+            },
+            duration: 1,
+            ease: "power2.out"
+        }, "start+=1.3"); // Wait for image to settle
 
-        tl.to(img, {
-            scale: 1,
-            y: 0,
-            duration: 2.5,
-            ease: 'expo.out'
-        }, "start+=0.5");
-
-        // 3. Bottom Letters Ascend
+        // 3. THEN AFTER: DEVOPS ENGINEER Reveal (Delayed until Raghav Joshi is fully out)
         tl.to(bottomLetters, {
-            ...cinematicAscend,
-            stagger: 0.05
-        }, "start+=0.7");
+            yPercent: 0,
+            stagger: {
+                each: 0.05,
+                from: "start"
+            },
+            duration: 1,
+            ease: "power2.out"
+        }, "start+=3.5"); // Substantial delay to ensure previous text is fully seen first
 
-        // 4. Floating texts Ascend
-        tl.to(floats, {
-            ...cinematicAscend,
-            stagger: 0.08
-        }, "start+=1");
+        // 3. Labels and Description Fade-In (Staggered red text)
+        tl.to([desc, ...floats], {
+            opacity: 1,
+            y: 0,
+            stagger: 0.1,
+            duration: 1,
+            ease: "power1.out"
+        }, "start+=1.2");
 
-        // 5. Professional 3D Parallax Drift (Deep volumetric shifts)
-        tl.to(topLetters, { 
-            y: -100, 
-            z: -250,           // Pushes back into the background tunnel
-            rotationX: -15,    // Tilts away smoothly
-            scale: 1.05, 
-            duration: 8, 
-            ease: 'none' 
-        }, "start+=2");
-
-        tl.to(bottomLetters, { 
-            y: -120, 
-            z: -100, 
-            rotationX: 10,     // Tilts upwards
-            scale: 1.05, 
-            duration: 8, 
-            ease: 'none' 
-        }, "start+=2");
-
-        tl.to(floats, { 
-            y: -60, 
-            z: 150,            // Floats lift towards the user
-            rotationY: 10,     // Slight lateral 3D rotation
-            duration: 8, 
-            ease: 'none' 
-        }, "start+=2");
-
-        tl.to(img, { 
-            y: -40, 
-            z: 100,            // Image breaks out of background text
-            scale: 1.05, 
-            duration: 8, 
-            ease: 'none' 
-        }, "start+=2.5");
+        // 4. Subtle Parallax on scroll continue
+        tl.to(imgContainer, { yPercent: -5, duration: 2 }, "start+=2");
+        tl.to(topLetters, { yPercent: -15, duration: 2 }, "start+=2");
+        tl.to(bottomLetters, { yPercent: 15, duration: 2 }, "start+=2");
 
         // 6. PHASE TWO: The skill items emerge sequentially AFTER the layout settles!
         tl.to(flyItems, {
