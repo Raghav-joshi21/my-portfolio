@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:www.bettinasosa.com)",
+      "Bash(find \"/Users/raghav/portfolio website/FREE_Adventurer 2D Pixel Art\" -type f -exec ls -lh {} \\\\;)",
+      "Bash(find \"/Users/raghav/portfolio website/building assests\" -type f -exec ls -lh {} \\\\;)",
+      "Bash(read f:*)",
+      "Bash(printf '%-60s\\\\n' '/Users/raghav/portfolio website/__TRACKED_VAR__')",
+      "Bash(python3 -c ':*)",
+      "Bash(mv /tmp/main_fixed.js \"/Users/raghav/portfolio website/main.js\")",
+      "Bash(node --input-type=module)",
+      "Bash(node:*)",
+      "Bash(python3:*)",
+      "Bash(sed -i '' 's|'\\\\''FREE_Adventurer%202D%20Pixel%20Art/|'\\\\''../FREE_Adventurer%202D%20Pixel%20Art/|g' '/Users/raghav/portfolio website/test-us/main.js')",
+      "Bash(sed -i '' 's|'\\\\''building%20assests/|'\\\\''../building%20assests/|g' '/Users/raghav/portfolio website/test-us/main.js')"
+    ]
+  }
+}

@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Raghav Joshi | Creative Engineer</title>
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Creative Builder · Software Engineer · Design Engineer. Product, code & craft.">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Jersey+10&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <script src="https://unpkg.com/lenis@1.1.20/dist/lenis.min.js"></script> 
+    
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="theme-light overflow-x-hidden">
+    <!-- Custom Cursor -->
+    <div id="cursor" class="pointer-events-none fixed left-0 top-0 z-[9999] h-3 w-3 rounded-full bg-primary mix-blend-difference"></div>
+
+    <!-- Navigation -->
+    <nav class="main-nav">
+        <div class="nav-left">
+            <a href="/" class="logo-group">
+                <div class="logo-box">R</div>
+                <span class="nav-copyright">©</span>
+                <div class="name-container">
+                    <span class="name-default">coded by Raghav</span>
+                    <span class="name-hover">Joshi</span>
+                </div>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Main Wrapper for Smooth Scroll (Lenis) -->
+    <main id="main-wrapper">
+        <!-- Hero Section -->
+        <section id="hero" class="hero-section">
+            <div id="hero-zoom-overlay" class="hero-zoom-overlay"></div>
+            <div class="hero-text-stage" id="hero-text-stage"></div>
+            <div class="hero-scroll-hint">Scroll ↘</div>
+        </section>
+
+        <!-- Name Reveal Section -->
+        <section id="name-reveal" class="name-reveal-section" data-theme="dark">
+            <div class="name-reveal-bg-pattern"></div>
+            <!-- Huge background text: RAGHAV JOSHI -->
+            <div class="name-bg-text top-text">
+                <span>R</span><span>A</span><span>G</span><span>H</span><span>A</span><span>V</span>
+                <span>&nbsp;</span>
+                <span>J</span><span>O</span><span>S</span><span>H</span><span>I</span>
+            </div>
+
+            <!-- Central Image -->
+            <div class="name-reveal-image-container">
+                <img src="RAGHAV JOSHI.png" alt="Raghav Joshi" class="name-image">
+            </div>
+
+            <!-- Floating Texts -->
+            <div class="floating-texts">
+                <div class="float-item float-1">SCALABLE INFRASTRUCTURE</div>
+                <div class="float-item float-3">SYSTEM DESIGN</div>
+                <div class="float-item float-5">CLOUD &amp; AUTOMATION</div>
+                
+                <!-- Fly-past Background Items -->
+                <div class="fly-item fly-1">AI AGENTS</div>
+                <div class="fly-item fly-2">DEVOPS ENGINEER</div>
+                <div class="fly-item fly-5">JENKINS</div>
+                <div class="fly-item fly-6">KUBERNETES</div>
+
+                <div class="text-description float-item">
+                    Building at the intersection of DevOps, cloud architecture, and AI integrations.<br><br>
+                    Crafting robust ecosystems that scale effortlessly.
+                </div>
+            </div>
+
+            <!-- Huge background text: DevOps Engineer -->
+            <div class="name-bg-text bottom-text">
+                <span>D</span><span>e</span><span>v</span><span>O</span><span>p</span><span>s</span>
+                <span>&nbsp;</span>
+                <span>E</span><span>n</span><span>g</span><span>i</span><span>n</span><span>e</span><span>e</span><span>r</span>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="about" class="about-section section-padding" data-theme="dark">
+            <div class="container relative flex flex-col md:flex-row items-start justify-between">
+                <div class="about-text-container">
+                    <!-- content coming soon -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Projects Section triggers Theme Swap -->
+        <section id="projects" class="project-section section-padding" data-theme="dark">
+            <div class="container overflow-visible">
+                <h2 class="section-subtitle opacity-50 mb-12 uppercase tracking-widest text-sm font-bold">Selected Projects</h2>
+
+                <div class="project-list">
+                    <!-- Project Box 1 -->
+                    <div class="project-row group" data-preview="https://via.placeholder.com/600x400/21242b/ffffff?text=StyleSync">
+                        <div class="project-title-area">
+                            <span class="project-number font-light opacity-50 mr-8">01</span>
+                            <h3 class="project-name font-bold text-4xl sm:text-6xl">StyleSync</h3>
+                        </div>
+                        <div class="project-meta flex gap-4 text-sm font-semibold opacity-60">
+                            <span>Design Engineer</span>
+                            <span>React</span>
+                        </div>
+                        <div class="project-arrow opacity-0 group-hover:opacity-100 transition-opacity">↗</div>
+                    </div>
+
+                    <!-- Project Box 2 -->
+                    <div class="project-row group" data-preview="https://via.placeholder.com/600x400/d4e3ec/ffffff?text=Catapult">
+                        <div class="project-title-area">
+                            <span class="project-number font-light opacity-50 mr-8">02</span>
+                            <h3 class="project-name font-bold text-4xl sm:text-6xl">Catapult</h3>
+                        </div>
+                        <div class="project-meta flex gap-4 text-sm font-semibold opacity-60">
+                            <span>Founding Engineer</span>
+                            <span>DeFi</span>
+                        </div>
+                        <div class="project-arrow opacity-0 group-hover:opacity-100 transition-opacity">↗</div>
+                    </div>
+
+                    <!-- Project Box 3 -->
+                    <div class="project-row group" data-preview="https://via.placeholder.com/600x400/9289BD/ffffff?text=M31+Controller">
+                        <div class="project-title-area">
+                            <span class="project-number font-light opacity-50 mr-8">03</span>
+                            <h3 class="project-name font-bold text-4xl sm:text-6xl">M31 Controller</h3>
+                        </div>
+                        <div class="project-meta flex gap-4 text-sm font-semibold opacity-60">
+                            <span>Interactive Design</span>
+                            <span>Three.js</span>
+                        </div>
+                        <div class="project-arrow opacity-0 group-hover:opacity-100 transition-opacity">↗</div>
+                    </div>
+                </div>
+
+                <div class="view-all-btn mt-20 flex justify-center">
+                    <a href="/projects" class="pill-btn">View Projects</a>
+                </div>
+            </div>
+
+            <!-- Global Project Hover Preview -->
+            <div id="project-preview" class="pointer-events-none fixed left-0 top-0 z-[50] h-[300px] w-[400px] scale-0 overflow-hidden rounded-xl opacity-0">
+                <img src="" alt="Project Preview" class="h-full w-full object-cover">
+            </div>
+        </section>
+
+        <!-- Footer Section -->
+        <footer id="contact" class="footer-section section-padding" data-theme="dark">
+            <div class="container footer-top">
+                <div class="contact-header relative border-b border-gray-600 pb-12">
+                    <span class="flex items-center">
+                        <div class="profile-image-container relative h-16 w-16 overflow-hidden rounded-full sm:h-[100px] sm:w-[100px]">
+                            <img src="https://via.placeholder.com/200?text=Profile" alt="Raghav Joshi" class="profile-img">
+                        </div>
+                        <h2 class="ml-3 text-xl font-medium sm:text-[5vh]">Let's work together!</h2>
+                    </span>
+
+                    <div class="bubble-btn-container absolute right-0 top-[calc(100%-80px)]">
+                        <a href="mailto:raghav@example.com" class="bubble-btn group">
+                            <span class="relative z-10">Get in touch</span>
+                            <div class="bubble-fill"></div>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="footer-bottom mt-32 flex flex-col justify-between sm:flex-row pb-12 gap-8">
+                    <p class="max-w-[400px] text-base opacity-70">AI/LLM enthusiast | Web3 builder | Passionate about using technology to make the world a better place.</p>
+
+                    <div class="flex gap-16">
+                        <div class="footer-col">
+                            <h3 class="text-gray-500 font-light mb-4 text-sm uppercase tracking-widest">Socials</h3>
+                            <div class="flex gap-4 font-bold">
+                                <a href="#" class="social-link">Twitter</a>
+                                <a href="#" class="social-link">Github</a>
+                                <a href="#" class="social-link">Linkedin</a>
+                            </div>
+                        </div>
+                        <div class="footer-col">
+                            <h3 class="text-gray-500 font-light mb-4 text-sm uppercase tracking-widest">Version</h3>
+                            <p class="font-bold">2026 © Edition</p>
+                        </div>
+                        <div class="footer-col min-w-[200px]">
+                            <h3 class="text-gray-500 font-light mb-4 text-sm uppercase tracking-widest">Timezone</h3>
+                            <p id="timezone-clock" class="font-bold">--:--:-- -- UK (GMT+1)</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </main>
+
+    <script type="module" src="main.js"></script>
+</body>
+</html>

@@ -1,0 +1,530 @@
+/* 
+ * Bettina Sosa Portfolio | Reconstruction
+ * --------------------------------------
+ */
+
+:root {
+    --bg-light: #ffffff;
+    --text-light: #000000;
+    --bg-dark: #000000;
+    --text-dark: #ffffff;
+    --accent: #6c5dd3; /* Purple from Bettina's menu */
+    --accent-blue: #007aff;
+    --nav-height: 100px;
+    --transition-theme: background-color 1s cubic-bezier(0.16, 1, 0.3, 1), 
+                       color 1s cubic-bezier(0.16, 1, 0.3, 1);
+    --transition-smooth: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Reset & Global */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+    line-height: normal;
+    transition: var(--transition-theme);
+}
+
+body.theme-light {
+    background-color: var(--bg-light);
+    color: var(--text-light);
+}
+
+body.theme-dark {
+    background-color: var(--bg-dark);
+    color: var(--text-dark);
+}
+
+h1, h2, h3, .logo-box {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 700;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+    transition: var(--transition-smooth);
+}
+
+.container {
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 0 4rem;
+}
+
+.section-padding {
+    padding: 10rem 0;
+}
+
+/* Custom Cursor */
+#cursor {
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+    width: 12px;
+    height: 12px;
+    z-index: 9999;
+    mix-blend-mode: exclusion;
+    border-radius: 50%;
+    background-color: #fff;
+}
+
+/* Navigation */
+.main-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: var(--nav-height);
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 4rem;
+    z-index: 5000;
+    pointer-events: none;
+    color: #111;
+}
+
+.nav-left,
+.nav-right {
+    display: flex;
+    align-items: center;
+    pointer-events: auto;
+}
+
+.logo-group {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: inherit;
+}
+
+.logo-box {
+    width: 34px;
+    height: 34px;
+    background: #000;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 800;
+    font-size: 1.1rem;
+    border-radius: 4px;
+    flex-shrink: 0;
+}
+
+body.theme-dark .logo-box {
+    background: #fff;
+    color: #000;
+}
+
+.nav-copyright {
+    font-size: 0.85rem;
+    line-height: 1;
+}
+
+/* Sliding name: "coded by Raghav" → "Joshi" on hover */
+.name-container {
+    position: relative;
+    overflow: hidden;
+    height: 1.2em;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.name-default,
+.name-hover {
+    display: block;
+    white-space: nowrap;
+    line-height: 1.2;
+    transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.name-hover {
+    position: absolute;
+    top: 100%;
+    left: 0;
+}
+
+.logo-group:hover .name-default {
+    transform: translateY(-100%);
+}
+
+.logo-group:hover .name-hover {
+    transform: translateY(-100%);
+}
+
+
+
+/* ── Hero Section — scroll dismantling animation ── */
+.hero-section {
+    height: 100vh;
+    background: #f5f5f3;
+    position: relative;
+    overflow: hidden;
+}
+
+
+
+/* Visible text: bottom-left anchored */
+.hero-text-stage {
+    position: absolute;
+    bottom: 4vh;
+    left: 3vw;
+    right: 3vw;
+}
+
+/* Each word/phrase line */
+.hero-line {
+    display: block;
+    font-family: 'Jersey 10', sans-serif;
+    font-weight: 400;
+    font-size: clamp(5rem, 13vw, 17rem);
+    line-height: 0.93;
+    color: #111;
+    white-space: nowrap;
+    user-select: none;
+}
+
+/* Hidden extra lines placed below viewport */
+.hero-hidden-stage {
+    position: absolute;
+    left: 3vw;
+    top: 108vh;
+    pointer-events: none;
+}
+
+.hero-letter {
+    display: inline-block;
+    will-change: transform, opacity;
+    transform-origin: center center;
+}
+
+.hero-space {
+    display: inline-block;
+    width: 0.28em;
+    flex-shrink: 0;
+}
+
+.hero-zoom-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 50;
+    background: #000;
+    pointer-events: none;
+    opacity: 0;
+}
+
+.hero-scroll-hint {
+    position: absolute;
+    bottom: 3rem;
+    right: 4rem;
+    font-weight: 800;
+    font-size: 1.1rem;
+    color: #111;
+    opacity: 0.55;
+    z-index: 10;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+/* ── Name Reveal Section ── */
+.name-reveal-section {
+    height: 100vh;
+    background-color: #000;
+    position: relative;
+    overflow: hidden;
+    color: #fff;
+    font-family: 'Archivo Black', sans-serif;
+    perspective: 1000px; /* Enable 3D space */
+}
+
+.name-reveal-bg-pattern {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        linear-gradient(to right, rgba(255, 255, 255, 0.08) 1px, transparent 1px), 
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+    background-size: 32px 32px;
+    mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
+    -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
+    pointer-events: none;
+    z-index: 0; /* Keep it securely in the background */
+}
+
+.name-bg-text {
+    position: absolute;
+    width: 100%;
+    text-align: center;
+    z-index: 1;
+    white-space: nowrap;
+    letter-spacing: -2px;
+    display: flex;
+    justify-content: center;
+    color: #fcfbf9; /* Warm off-white */
+    text-shadow: 
+        0 40px 60px rgba(159, 199, 255, 0.4),  /* Intense bottom icy blue glow (#9fc7ff) */
+        0 -10px 20px rgba(159, 199, 255, 0.2), /* Soft top highlight */
+        0 15px 15px rgba(0, 0, 0, 0.9);      /* Core black drop shadow */
+}
+
+.name-bg-text.top-text {
+    top: 5vh;
+    font-size: clamp(3.2rem, 9.6vw, 12rem); /* Reduced 20% to make it stronger but smaller */
+    text-transform: uppercase;
+    width: 100%; 
+    letter-spacing: -2px;
+}
+
+.name-bg-text.bottom-text {
+    bottom: -3vh; /* Shifted down */
+    font-size: clamp(5rem, 12vw, 12rem);
+    z-index: 4; /* Brings Devops Engineer to the front of the image */
+}
+
+.name-bg-text span {
+    display: inline-block;
+}
+
+.name-reveal-image-container {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 85vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    z-index: 2;
+    pointer-events: none;
+}
+
+.name-reveal-image-container::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 30vh;
+    background: linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 100%);
+    pointer-events: none;
+}
+
+.name-image {
+    height: 100%;
+    width: auto;
+    object-fit: contain;
+    transform-origin: bottom center;
+}
+
+/* Floating Texts */
+.floating-texts {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    pointer-events: none;
+}
+
+.float-item {
+    position: absolute;
+    font-weight: 800;
+    letter-spacing: 1px;
+    color: #fcfbf9;
+    text-shadow: 
+        0 20px 40px rgba(159, 199, 255, 0.3),
+        0 5px 10px rgba(0, 0, 0, 0.9);
+}
+
+.text-description {
+    top: 32%;
+    left: 58%;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 800;
+    line-height: 1.5;
+    text-transform: none;
+    color: #9fc7ff; /* Crisp icy blue tone */
+    letter-spacing: 0;
+    max-width: 500px;
+    text-shadow: 0 10px 20px rgba(159, 199, 255, 0.15), 0 5px 5px rgba(0,0,0,0.8);
+}
+
+/* Specific styling for System Design and Scalable Infrastructure */
+.float-1, .float-3 {
+    color: #9fc7ff;
+    text-shadow: 
+        0 15px 30px rgba(159, 199, 255, 0.6),
+        0 5px 10px rgba(0, 0, 0, 0.9);
+}
+
+/* Fly past elements */
+.fly-item {
+    position: absolute;
+    font-weight: 800;
+    letter-spacing: 1px;
+    color: #fcfbf9;
+    font-family: 'Archivo Black', sans-serif;
+    text-shadow: 0 15px 30px rgba(159, 199, 255, 0.4), 0 5px 10px rgba(0,0,0,0.9);
+    z-index: 4;
+}
+
+.fly-1 { top: 25%; left: 15%; font-size: 1.2rem; }
+.fly-2 { top: 60%; left: 75%; font-size: 1.4rem; color: #9fc7ff; }
+.fly-3 { top: 40%; left: 70%; font-size: 1.1rem; }
+.fly-4 { top: 80%; left: 25%; font-size: 1.3rem; }
+.fly-5 { top: 20%; left: 60%; font-size: 1.2rem; }
+.fly-6 { top: 50%; left: 10%; font-size: 1.4rem; }
+
+.float-1 { top: 40%; left: 27%; font-size: 0.9rem; }
+.float-3 { top: 78%; left: 16%; font-size: 0.9rem; }
+.float-5 { top: 78%; left: 60%; font-size: 0.9rem; }
+
+
+/* About Section */
+.about-section {
+    background-color: var(--bg-dark);
+    color: var(--text-dark);
+}
+
+.about-me-circle {
+    width: 180px;
+    height: 180px;
+    background-color: #ef4444; /* Bright Red from Bettina's site */
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-weight: 800;
+    font-size: 1.1rem;
+    line-height: 1.2;
+    text-transform: uppercase;
+    color: #fff;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.circle-hover-bg {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #000;
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.about-me-circle:hover .circle-hover-bg {
+    transform: translateY(-100%);
+}
+
+#timezone-clock {
+    font-family: inherit;
+    font-variant-numeric: tabular-nums;
+}
+
+/* Projects Section */
+.project-section {
+    min-height: 100vh;
+    padding-bottom: 20rem;
+    background-color: var(--bg-dark);
+    color: var(--text-dark);
+}
+
+.project-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 3rem 0;
+    border-bottom: 1px solid rgba(128, 128, 128, 0.3);
+    cursor: pointer;
+    transition: var(--transition-smooth);
+}
+
+.project-row:hover {
+    padding-left: 2rem;
+    opacity: 0.5;
+}
+
+.project-title-area {
+    display: flex;
+    align-items: baseline;
+}
+
+.project-arrow {
+    font-size: 2.5rem;
+    font-weight: light;
+}
+
+.pill-btn {
+    display: inline-block;
+    padding: 1.2rem 2.5rem;
+    border-radius: 50px;
+    background-color: var(--accent-blue);
+    color: #fff;
+    font-weight: 700;
+    font-size: 1.1rem;
+    transition: var(--transition-smooth);
+}
+
+#project-preview {
+    transition: transform 0.1s linear, opacity 0.3s ease;
+}
+
+/* Footer & Bubble Button */
+.footer-section {
+    background-color: #0c0d0f;
+    color: #fff;
+    z-index: 100;
+}
+
+.bubble-btn {
+    width: 200px;
+    height: 200px;
+    background-color: var(--accent-blue);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+}
+
+.bubble-fill {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    height: 200%;
+    background-color: var(--accent); /* Purple fill */
+    transition: transform 0.6s cubic-bezier(0.76, 0, 0.24, 1);
+    border-radius: 50%;
+}
+
+.bubble-btn:hover .bubble-fill {
+    transform: translateY(-100%);
+}
+
+.social-link:hover {
+    color: var(--accent-blue);
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+    .container { padding: 0 2rem; }
+    .main-nav { padding: 0 2rem; }
+    .hero-section { padding-left: 5vw; }
+}
