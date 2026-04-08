@@ -113,6 +113,19 @@ function initHeroScrollAnimation() {
             duration: 2,
             ease: 'power2.in',
         }, 1.4);
+
+        // Phase C: Letters keep drifting outward + fade — no freeze feeling while mask collapses.
+        // Multiply their scatter position outward and rotate further so they feel alive.
+        scatter.forEach(({ el, tx, ty, r }) => {
+            tl.to(el, {
+                x: tx * 1.5,
+                y: ty * 1.5,
+                rotation: r * 1.3,
+                opacity: 0,
+                duration: 2,
+                ease: 'power1.in',
+            }, 1.4);
+        });
     });
 }
 
