@@ -86,22 +86,20 @@ function initHeroScrollAnimation() {
             scrollTrigger: {
                 trigger: '#hero',
                 start: 'top top',
-                end: '+=130%',   // short pin — just enough for scatter + fade
+                end: '+=300%',
                 scrub: 0.8,
                 pin: true,
+                pinSpacing: false,  // ← no spacer: name-reveal floats up behind hero
             },
         });
 
-        // Letters scatter
+        // Letters scatter and HOLD — visible behind name-reveal's triangle clip
         scatter.forEach(({ el, tx, ty, r }) => {
             tl.to(el, { x: tx, y: ty, rotation: r, opacity: 1, duration: 1, ease: 'expo.out' }, 0);
         });
 
-        // Brief hold
+        // Brief hold — letters stay scattered throughout name-reveal transition
         tl.to({}, { duration: 0.4 });
-
-        // Letters fade out — clean handoff to name-reveal triangle
-        tl.to(allLetters, { opacity: 0, duration: 0.6, ease: 'power2.in' });
     });
 }
 
