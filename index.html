@@ -37,73 +37,83 @@
         </div>
     </nav>
 
-    <!-- SVG clip-path for hero inverted triangle — GSAP shrinks this to a center point -->
-    <svg width="0" height="0" style="position:absolute;overflow:hidden;pointer-events:none">
-        <defs>
-            <clipPath id="hero-tri-clip" clipPathUnits="objectBoundingBox">
-                <!-- Large rounded triangle that extends far beyond all screen edges -->
-                <!-- GSAP animates 'd' to collapse to center, revealing name-reveal in corners -->
-                <path id="hero-tri-path"
-                    d="M 0.50 -0.60 Q 0.50 -0.90 0.85 -0.15 L 1.75 1.65 Q 1.95 1.95 1.40 1.95 L -0.40 1.95 Q -0.95 1.95 -0.75 1.65 L 0.15 -0.15 Q 0.50 -0.90 0.50 -0.60"/>
-            </clipPath>
-        </defs>
-    </svg>
 
     <!-- Main Wrapper for Smooth Scroll (Lenis) -->
     <main id="main-wrapper">
         <!-- Hero Section -->
+        <!--
+            Layering order (top → bottom):
+            z-index 5 : .hero-scroll-hint
+            z-index 4 : .name-reveal-content-overlay  ← image + text, NEVER clipped
+            z-index 2 : #hero-clip-layer               ← white bg + letters, clip-path applied HERE
+            z-index 1 : .name-reveal-bg-pattern        ← decorative texture on black bg
+            background : #hero itself (#000)
+        -->
         <section id="hero" class="hero-section">
-            <div id="hero-zoom-overlay" class="hero-zoom-overlay"></div>
-            <div class="hero-text-stage" id="hero-text-stage"></div>
+            <!-- Decorative pattern sits on the black background before the clip layer -->
+            <div class="name-reveal-bg-pattern"></div>
+
+            <!-- Clip layer: white background + scattered letters.
+                 clip-path (SVG triangle) is applied to THIS element only. -->
+            <div id="hero-clip-layer">
+                <div id="hero-zoom-overlay" class="hero-zoom-overlay"></div>
+                <div class="hero-text-stage" id="hero-text-stage"></div>
+            </div>
+
+            <!-- Content overlay: image + text sit ABOVE the clip layer.
+                 They are never clipped by the triangle — they float in front. -->
+            <div class="name-reveal-content-overlay">
+                <!-- Huge background text: RAGHAV JOSHI -->
+                <div class="name-text-mask top-text-mask">
+                    <div class="name-bg-text top-text">
+                        <span>R</span><span>A</span><span>G</span><span>H</span><span>A</span><span>V</span>
+                        <span>&nbsp;</span>
+                        <span>J</span><span>O</span><span>S</span><span>H</span><span>I</span>
+                    </div>
+                </div>
+
+                <!-- Central Image -->
+                <div class="name-reveal-image-container">
+                    <img src="RAGHAV JOSHI.png" alt="Raghav Joshi" class="name-image">
+                </div>
+
+                <!-- Floating Texts -->
+                <div class="floating-texts">
+                    <div class="float-item float-1">SCALABLE INFRASTRUCTURE</div>
+                    <div class="float-item float-3">SYSTEM DESIGN</div>
+                    <div class="float-item float-5">CLOUD &amp; AUTOMATION</div>
+                    <div class="float-item float-6">CI CD PIPELINES</div>
+                    <div class="float-item float-7">AI AGENTS</div>
+
+                    <!-- Fly-past Background Items -->
+                    <div class="fly-item fly-1">AI AGENTS</div>
+                    <div class="fly-item fly-2">DEVOPS ENGINEER</div>
+                    <div class="fly-item fly-5">JENKINS</div>
+                    <div class="fly-item fly-6">KUBERNETES</div>
+
+                    <div class="text-description float-item">
+                        Building at the intersection of DevOps, cloud architecture, and AI integrations.<br><br>
+                        Crafting robust ecosystems that scale effortlessly.
+                    </div>
+                </div>
+
+                <!-- Huge background text: DevOps Engineer -->
+                <div class="name-text-mask bottom-text-mask">
+                    <div class="name-bg-text bottom-text">
+                        <span>D</span><span>e</span><span>v</span><span>O</span><span>p</span><span>s</span>
+                        <span>&nbsp;</span>
+                        <span>E</span><span>n</span><span>g</span><span>i</span><span>n</span><span>e</span><span>e</span><span>r</span>
+                    </div>
+                </div>
+            </div>
+
             <div class="hero-scroll-hint">Scroll ↘</div>
         </section>
 
-        <!-- Name Reveal Section -->
-        <section id="name-reveal" class="name-reveal-section" data-theme="dark">
-            <div class="name-reveal-bg-pattern"></div>
-            <!-- Huge background text: RAGHAV JOSHI -->
-            <div class="name-text-mask top-text-mask">
-                <div class="name-bg-text top-text">
-                    <span>R</span><span>A</span><span>G</span><span>H</span><span>A</span><span>V</span>
-                    <span>&nbsp;</span>
-                    <span>J</span><span>O</span><span>S</span><span>H</span><span>I</span>
-                </div>
-            </div>
-
-            <!-- Central Image -->
-            <div class="name-reveal-image-container">
-                <img src="RAGHAV JOSHI.png" alt="Raghav Joshi" class="name-image">
-            </div>
-
-            <!-- Floating Texts -->
-            <div class="floating-texts">
-                <div class="float-item float-1">SCALABLE INFRASTRUCTURE</div>
-                <div class="float-item float-3">SYSTEM DESIGN</div>
-                <div class="float-item float-5">CLOUD &amp; AUTOMATION</div>
-                <div class="float-item float-6">CI CD PIPELINES</div>
-                <div class="float-item float-7">AI AGENTS</div>
-                
-                <!-- Fly-past Background Items -->
-                <div class="fly-item fly-1">AI AGENTS</div>
-                <div class="fly-item fly-2">DEVOPS ENGINEER</div>
-                <div class="fly-item fly-5">JENKINS</div>
-                <div class="fly-item fly-6">KUBERNETES</div>
-
-                <div class="text-description float-item">
-                    Building at the intersection of DevOps, cloud architecture, and AI integrations.<br><br>
-                    Crafting robust ecosystems that scale effortlessly.
-                </div>
-            </div>
-
-            <!-- Huge background text: DevOps Engineer -->
-            <div class="name-text-mask bottom-text-mask">
-                <div class="name-bg-text bottom-text">
-                    <span>D</span><span>e</span><span>v</span><span>O</span><span>p</span><span>s</span>
-                    <span>&nbsp;</span>
-                    <span>E</span><span>n</span><span>g</span><span>i</span><span>n</span><span>e</span><span>e</span><span>r</span>
-                </div>
-            </div>
-        </section>
+        <!-- Name Reveal Section — black background layer that sits behind hero.
+             Provides the scroll space (pin: true) while hero pins with pinSpacing: false.
+             Content has been moved into #hero's .name-reveal-content-overlay above. -->
+        <section id="name-reveal" class="name-reveal-section" data-theme="dark"></section>
 
         <!-- ══ Construction / Projects Scene ══ -->
         <div id="construction-reveal-wrapper" class="construction-reveal-wrapper">

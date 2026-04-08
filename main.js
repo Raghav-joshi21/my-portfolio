@@ -62,15 +62,15 @@ function initHeroScrollAnimation() {
     const hiddenStage = document.createElement('div');
     hiddenStage.className = 'hero-hidden-stage';
     HIDDEN_LINES.forEach(l => buildLine(l, hiddenStage, hiddenLetters));
-    document.getElementById('hero').appendChild(hiddenStage);
+    // Append inside #hero-clip-layer so hidden letters are clipped with the white panel
+    document.getElementById('hero-clip-layer').appendChild(hiddenStage);
 
     const ready = Promise.race([document.fonts.ready, new Promise(r => setTimeout(r, 600))]);
 
     ready.then(() => {
         const vw = window.innerWidth, vh = window.innerHeight;
         const allLetters = [...visibleLetters, ...hiddenLetters];
-        const heroEl = document.getElementById('hero');
-        const triPath = document.getElementById('hero-tri-path');
+        const heroClipLayer = document.getElementById('hero-clip-layer');
 
         // Scatter destinations
         const scatter = allLetters.map(el => {
@@ -84,9 +84,7 @@ function initHeroScrollAnimation() {
         });
 
         gsap.set(hiddenLetters, { opacity: 0 });
-
-        // Apply the SVG clip-path to hero — it starts as a huge triangle (hero fully visible)
-        gsap.set(heroEl, { clipPath: 'url(#hero-tri-clip)' });
+        // --mask-scale starts at 3.5 (set in CSS). No JS set needed.
 
         const tl = gsap.timeline({
             scrollTrigger: {
@@ -107,18 +105,14 @@ function initHeroScrollAnimation() {
         // Phase B: Brief hold (1.0→1.4)
         tl.to({}, { duration: 0.4 });
 
-        // Phase C: Rounded triangle SHRINKS from full-screen to center point (1.4→3.4)
-        // Corners become black = name-reveal shows through the clipped-away areas
-        // Same path structure: M Q L Q L Q L Q (8 commands, GSAP interpolates smoothly)
-        if (triPath) {
-            tl.to(triPath, {
-                attr: {
-                    d: 'M 0.50 0.50 Q 0.50 0.50 0.50 0.50 L 0.50 0.50 Q 0.50 0.50 0.50 0.50 L 0.50 0.50 Q 0.50 0.50 0.50 0.50 L 0.50 0.50 Q 0.50 0.50 0.50 0.50'
-                },
-                duration: 2,
-                ease: 'power2.in',
-            }, 1.4);  // starts after scatter+hold
-        }
+        // Phase C: White panel SHRINKS — CSS mask-image triangle scales 3.5 → 0 (1.4→3.4)
+        // Same technique as monkeytalkie.com: animate --mask-scale CSS variable via GSAP.
+        // The black hero bg is revealed in the corners as the white panel collapses to a point.
+        tl.to(heroClipLayer, {
+            '--mask-scale': 0,
+            duration: 2,
+            ease: 'power2.in',
+        }, 1.4);
     });
 }
 
@@ -130,14 +124,16 @@ function initNameRevealAnimation() {
     ]);
 
     ready.then(() => {
-        const section = document.getElementById('name-reveal');
-        if (!section) return;
+        // Content is now inside #hero's .name-reveal-content-overlay (z-index 4),
+        // above the clip layer, so it's never masked by the triangle.
+        const hero = document.getElementById('hero');
+        if (!hero) return;
 
-        const topLetters    = section.querySelectorAll('.top-text span');
-        const bottomLetters = section.querySelectorAll('.bottom-text span');
-        const imgContainer  = section.querySelector('.name-reveal-image-container');
-        const floats        = section.querySelectorAll('.float-item');
-        const desc          = section.querySelector('.text-description');
+        const topLetters    = hero.querySelectorAll('.top-text span');
+        const bottomLetters = hero.querySelectorAll('.bottom-text span');
+        const imgContainer  = hero.querySelector('.name-reveal-image-container');
+        const floats        = hero.querySelectorAll('.float-item');
+        const desc          = hero.querySelector('.text-description');
 
         // No clip-path on name-reveal — it sits fully below the hero
         // The hero's SVG triangle clip reveals MORE of this section as it shrinks
@@ -147,36 +143,54 @@ function initNameRevealAnimation() {
         gsap.set(bottomLetters, { yPercent: 105 });
         gsap.set([floats, desc],{ opacity: 0, y: 20 });
 
+        // scrub matches hero (0.8) for frame-perfect sync
         const tl = gsap.timeline({
             scrollTrigger: {
                 trigger: '#name-reveal',
                 start: 'top top',
                 end: '+=350%',
-                scrub: 1,
+                scrub: 0.8,
                 pin: true,
             }
         });
 
-        // Portrait rises as hero triangle is mid-collapse (black corners already visible)
-        tl.to(imgContainer, { scale:1, yPercent:0, opacity:1, duration:1.5, ease:'power2.out' }, 'start');
+        // ── Hold while hero scatter plays (hero Phase A+B = 1.4s) ──
+        // Nothing visible yet — triangle is still large, corners just starting to appear
+        tl.to({}, { duration: 1.4 });
 
-        // RAGHAV JOSHI wave in
+        // ── 1.4s: Triangle starts collapsing → content rises simultaneously ──
+
+        // Photo rises from bottom-center
+        tl.to(imgContainer, {
+            scale: 1, yPercent: 0, opacity: 1,
+            duration: 1.2, ease: 'power2.out',
+        }, 1.4);
+
+        // RAGHAV JOSHI letters rise one by one (left to right)
         tl.to(topLetters, {
-            yPercent:0, stagger:{ each:0.05, from:'start' }, duration:1, ease:'power2.out'
-        }, 'start+=1.2');
+            yPercent: 0,
+            stagger: { each: 0.04, from: 'start' },
+            duration: 0.8, ease: 'power3.out',
+        }, 1.6);
 
-        // Labels + description
-        tl.to([desc, ...floats], { opacity:1, y:0, stagger:0.1, duration:1, ease:'power1.out' }, 'start+=1.4');
+        // Floating labels + description fade up
+        tl.to([...floats, desc], {
+            opacity: 1, y: 0,
+            stagger: 0.07, duration: 0.6, ease: 'power1.out',
+        }, 2.0);
 
-        // DEVOPS ENGINEER
+        // Bottom text "DevOps Engineer" — starts early so it's fully revealed
+        // before the mask finishes collapsing (mask ends at hero t=3.4)
         tl.to(bottomLetters, {
-            yPercent:0, stagger:{ each:0.05, from:'start' }, duration:1, ease:'power2.out'
-        }, 'start+=2.5');
+            yPercent: 0,
+            stagger: { each: 0.02, from: 'start' },
+            duration: 0.5, ease: 'power3.out',
+        }, 1.5);
 
-        // Subtle parallax hold
-        tl.to(imgContainer,  { yPercent:-5,  duration:1.5 }, 'start+=2');
-        tl.to(topLetters,    { yPercent:-10, duration:1.5 }, 'start+=2');
-        tl.to(bottomLetters, { yPercent:10,  duration:1.5 }, 'start+=2');
+        // Subtle upward parallax drift as triangle fully closes
+        tl.to(imgContainer,  { yPercent: -4, duration: 1.2 }, 2.8);
+        tl.to(topLetters,    { yPercent: -8, duration: 1.2 }, 2.8);
+        tl.to(bottomLetters, { yPercent:  6, duration: 1.2 }, 2.8);
 
         ScrollTrigger.sort();
     });
