@@ -84,9 +84,7 @@ function initHeroScrollAnimation() {
         });
 
         gsap.set(hiddenLetters, { opacity: 0 });
-
-        // Apply the SVG clip-path to hero — it starts as a huge triangle (hero fully visible)
-        gsap.set(heroEl, { clipPath: 'url(#hero-tri-clip)' });
+        // Hero is nowbackdrop (z:10) — name-reveal (z:20) overlay handles the mask
 
         const tl = gsap.timeline({
             scrollTrigger: {
@@ -106,19 +104,6 @@ function initHeroScrollAnimation() {
 
         // Phase B: Brief hold (1.0→1.4)
         tl.to({}, { duration: 0.4 });
-
-        // Phase C: Rounded triangle SHRINKS from full-screen to center point (1.4→3.4)
-        // Corners become black = name-reveal shows through the clipped-away areas
-        // Same path structure: M Q L Q L Q L Q (8 commands, GSAP interpolates smoothly)
-        if (triPath) {
-            tl.to(triPath, {
-                attr: {
-                    d: 'M 0.50 0.50 Q 0.50 0.50 0.50 0.50 L 0.50 0.50 Q 0.50 0.50 0.50 0.50 L 0.50 0.50 Q 0.50 0.50 0.50 0.50 L 0.50 0.50 Q 0.50 0.50 0.50 0.50'
-                },
-                duration: 2,
-                ease: 'power2.in',
-            }, 1.4);  // starts after scatter+hold
-        }
     });
 }
 
@@ -139,9 +124,9 @@ function initNameRevealAnimation() {
         const floats        = section.querySelectorAll('.float-item');
         const desc          = section.querySelector('.text-description');
 
-        // No clip-path on name-reveal — it sits fully below the hero
-        // The hero's SVG triangle clip reveals MORE of this section as it shrinks
-        // Content starts hidden, waves in mid-way through the hero collapse
+        const cornersPath = document.getElementById('corners-path');
+
+        // Content starts hidden, but z-index:10 puts it ABOVE the overlay's z-index:1
         gsap.set(imgContainer,  { scale: 0.7, yPercent: 40, opacity: 0 });
         gsap.set(topLetters,    { yPercent: 105 });
         gsap.set(bottomLetters, { yPercent: 105 });
@@ -157,8 +142,19 @@ function initNameRevealAnimation() {
             }
         });
 
-        // Portrait rises as hero triangle is mid-collapse (black corners already visible)
-        tl.to(imgContainer, { scale:1, yPercent:0, opacity:1, duration:1.5, ease:'power2.out' }, 'start');
+        // ── Phase 0: The Triangle Window Shrinks (reveal Hero through the hole) ──
+        if (cornersPath) {
+            tl.to(cornersPath, {
+                attr: {
+                    d: 'M 0 0 L 1 0 L 1 1 L 0 1 Z M 0.50 0.50 Q 0.50 0.50 0.50 0.50 L 0.50 0.50 Q 0.50 0.50 0.50 0.50 L 0.50 0.50 Q 0.50 0.50 0.50 0.50 L 0.50 0.50 Q 0.50 0.50 0.50 0.50'
+                },
+                duration: 2.5,
+                ease: 'power2.inOut',
+            }, 'start');
+        }
+
+        // Portrait rises ON TOP (outside the hole)
+        tl.to(imgContainer, { scale:1, yPercent:0, opacity:1, duration:1.5, ease:'power2.out' }, 'start+=1');
 
         // RAGHAV JOSHI wave in
         tl.to(topLetters, {

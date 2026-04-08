@@ -172,7 +172,7 @@ body.theme-dark .logo-box {
     background: #f5f5f3;
     position: relative;
     overflow: hidden;
-    z-index: 200;  /* ON TOP — clips to rounded triangle, corners reveal name-reveal below */
+    z-index: 10;   /* Backdrop stays behind the name-reveal overlay */
 }
 
 
@@ -249,8 +249,25 @@ body.theme-dark .logo-box {
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 300;    /* ON TOP of hero (200) — portrait and text render above the triangle edge */
-    background: transparent; /* transparent so hero letters still show through the triangle center */
+    z-index: 20;    /* Sits ON TOP of hero */
+    background: transparent;
+}
+
+#nr-bg-overlay {
+    position: absolute;
+    inset: 0;
+    background: #000;
+    clip-path: url(#corners-mask);
+    z-index: 1;
+    pointer-events: none;
+}
+
+/* Ensure Raghav content elements are above the black overlay */
+.name-reveal-image-container, 
+.name-text-mask,
+.floating-texts {
+    position: relative;
+    z-index: 10;
 }
 
 .name-reveal-bg-pattern {
