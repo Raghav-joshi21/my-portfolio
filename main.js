@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initNameRevealAnimation();
 });
 
-// ── Hero: letters scatter → diamond clip-path wipes to black → name-reveal rises ──
+// ── Hero: letters scatter on scroll → fade → hero unpins cleanly ──
 function initHeroScrollAnimation() {
     const stage = document.getElementById('hero-text-stage');
     if (!stage) return;
@@ -47,62 +47,38 @@ function initHeroScrollAnimation() {
     function buildLine(text, parent, arr) {
         const line = document.createElement('div');
         line.className = 'hero-line';
-        let charIdx = 0;
         [...text].forEach(ch => {
             if (ch === ' ') {
-                const s = document.createElement('span');
-                s.className = 'hero-space';
-                line.appendChild(s);
+                const s = document.createElement('span'); s.className = 'hero-space'; line.appendChild(s);
             } else {
-                const s = document.createElement('span');
-                s.className = 'hero-letter';
-                s.textContent = ch;
-                charIdx++;
-                line.appendChild(s);
-                arr.push(s);
+                const s = document.createElement('span'); s.className = 'hero-letter'; s.textContent = ch;
+                line.appendChild(s); arr.push(s);
             }
         });
-        parent.appendChild(line);
-        lineIdx++;
+        parent.appendChild(line); lineIdx++;
     }
 
     VISIBLE_LINES.forEach(l => buildLine(l, stage, visibleLetters));
-
     const hiddenStage = document.createElement('div');
     hiddenStage.className = 'hero-hidden-stage';
     HIDDEN_LINES.forEach(l => buildLine(l, hiddenStage, hiddenLetters));
     document.getElementById('hero').appendChild(hiddenStage);
 
-    const ready = Promise.race([
-        document.fonts.ready,
-        new Promise(r => setTimeout(r, 600)),
-    ]);
+    const ready = Promise.race([document.fonts.ready, new Promise(r => setTimeout(r, 600))]);
 
     ready.then(() => {
-        const vw = window.innerWidth;
-        const vh = window.innerHeight;
+        const vw = window.innerWidth, vh = window.innerHeight;
         const allLetters = [...visibleLetters, ...hiddenLetters];
 
-        // Scatter destinations
         const scatter = allLetters.map(el => {
             const rect = el.getBoundingClientRect();
-            const tx = (Math.random() * 0.82 + 0.05) * vw - rect.left;
-            const ty = (Math.random() * 0.82 + 0.05) * vh - rect.top;
-            const r  = (Math.random() - 0.5) * 130;
-            return { el, tx, ty, r };
+            return {
+                el,
+                tx: (Math.random() * 0.82 + 0.05) * vw - rect.left,
+                ty: (Math.random() * 0.82 + 0.05) * vh - rect.top,
+                r:  (Math.random() - 0.5) * 130,
+            };
         });
-
-        // ── Diamond wipe overlay ──
-        // Build a black div with a diamond-shaped transparent window via clip-path
-        // clip-path describes the VISIBLE region (the diamond hole) — rest is opaque
-        const wipeOverlay = document.createElement('div');
-        wipeOverlay.id = 'diamond-wipe';
-        wipeOverlay.style.cssText = `
-            position: absolute; inset: 0; z-index: 50; pointer-events: none;
-            background: #000; opacity: 0;
-            clip-path: polygon(50% -80%, 180% 50%, 50% 180%, -80% 50%);
-        `;
-        document.getElementById('hero').appendChild(wipeOverlay);
 
         gsap.set(hiddenLetters, { opacity: 0 });
 
@@ -110,39 +86,24 @@ function initHeroScrollAnimation() {
             scrollTrigger: {
                 trigger: '#hero',
                 start: 'top top',
-                end: '+=200%',
+                end: '+=130%',   // short pin — just enough for scatter + fade
                 scrub: 0.8,
                 pin: true,
             },
         });
 
-        // Phase 1: Letters scatter
+        // Letters scatter
         scatter.forEach(({ el, tx, ty, r }) => {
-            tl.to(el, { x: tx, y: ty, rotation: r, opacity: 1,
-                duration: 1, ease: 'expo.out' }, 0);
+            tl.to(el, { x: tx, y: ty, rotation: r, opacity: 1, duration: 1, ease: 'expo.out' }, 0);
         });
 
         // Brief hold
-        tl.to({}, { duration: 0.3 });
+        tl.to({}, { duration: 0.4 });
 
-        const wipeAt = tl.duration();
-
-        // Phase 2: Diamond overlay fades in, letters fade out
-        tl.to(wipeOverlay, { opacity: 1, duration: 0.3, ease: 'none' }, wipeAt);
-        tl.to(allLetters,  { opacity: 0, duration: 0.4, ease: 'power2.in' }, wipeAt);
-
-        // Phase 3: Diamond window SHRINKS — clip-path polygon collapses to center point
-        // Start: diamond extends 80% beyond screen edges (full window visible)
-        // End:   diamond collapses to center — full black screen
-        tl.fromTo(wipeOverlay,
-            { clipPath: 'polygon(50% -80%, 180% 50%, 50% 180%, -80% 50%)' },
-            { clipPath: 'polygon(50% 50%, 50% 50%, 50% 50%, 50% 50%)',
-              duration: 1.4, ease: 'power2.in' },
-            wipeAt + 0.1
-        );
+        // Letters fade out — clean handoff to name-reveal triangle
+        tl.to(allLetters, { opacity: 0, duration: 0.6, ease: 'power2.in' });
     });
 }
-
 
 
 function initNameRevealAnimation() {
@@ -161,7 +122,14 @@ function initNameRevealAnimation() {
         const floats        = section.querySelectorAll('.float-item');
         const desc          = section.querySelector('.text-description');
 
-        // Initial states
+        // ── PHASE 0: Triangle clip starts as a tiny center point ──
+        // The entire name-reveal section is revealed through this growing triangle
+        // Triangle points upward (apex at top-center) matching the reference
+        const TRI_START = 'polygon(50% 50%, 50% 50%, 50% 50%)';
+        const TRI_END   = 'polygon(50% -120%, 170% 160%, -70% 160%)';
+        gsap.set(section, { clipPath: TRI_START });
+
+        // Content initial states (hidden, will wave in mid-triangle-expansion)
         gsap.set(imgContainer,  { scale: 0.7, yPercent: 40, opacity: 0 });
         gsap.set(topLetters,    { yPercent: 105 });
         gsap.set(bottomLetters, { yPercent: 105 });
@@ -171,32 +139,39 @@ function initNameRevealAnimation() {
             scrollTrigger: {
                 trigger: '#name-reveal',
                 start: 'top top',
-                end: '+=300%',
+                end: '+=400%',   // Extended to fit triangle expand + full content reveal
                 scrub: 1,
                 pin: true,
             }
         });
 
-        // 1. Portrait rises
-        tl.to(imgContainer, { scale:1, yPercent:0, opacity:1, duration:1.5, ease:'power2.out' }, 'start');
+        // ── PHASE 0: Triangle grows from tiny point to full screen ──
+        tl.to(section, {
+            clipPath: TRI_END,
+            duration: 2,
+            ease: 'power2.out'
+        }, 'start');
 
-        // 2. RAGHAV JOSHI wave in
+        // ── PHASE 1: Portrait rises as triangle is mid-expand ──
+        tl.to(imgContainer, { scale:1, yPercent:0, opacity:1, duration:1.5, ease:'power2.out' }, 'start+=1');
+
+        // ── PHASE 2: RAGHAV JOSHI wave in ──
         tl.to(topLetters, {
             yPercent:0, stagger:{ each:0.05, from:'start' }, duration:1, ease:'power2.out'
-        }, 'start+=1.3');
+        }, 'start+=2');
 
-        // 3. Labels fade in
-        tl.to([desc, ...floats], { opacity:1, y:0, stagger:0.1, duration:1, ease:'power1.out' }, 'start+=1.2');
+        // ── PHASE 3: Labels + description ──
+        tl.to([desc, ...floats], { opacity:1, y:0, stagger:0.1, duration:1, ease:'power1.out' }, 'start+=2.2');
 
-        // 4. DEVOPS ENGINEER wave in
+        // ── PHASE 4: DEVOPS ENGINEER ──
         tl.to(bottomLetters, {
             yPercent:0, stagger:{ each:0.05, from:'start' }, duration:1, ease:'power2.out'
         }, 'start+=3.5');
 
-        // 5. Subtle parallax hold
-        tl.to(imgContainer,  { yPercent:-5,  duration:1.5 }, 'start+=2');
-        tl.to(topLetters,    { yPercent:-10, duration:1.5 }, 'start+=2');
-        tl.to(bottomLetters, { yPercent:10,  duration:1.5 }, 'start+=2');
+        // Subtle parallax hold
+        tl.to(imgContainer,  { yPercent:-5,  duration:1.5 }, 'start+=2.5');
+        tl.to(topLetters,    { yPercent:-10, duration:1.5 }, 'start+=2.5');
+        tl.to(bottomLetters, { yPercent:10,  duration:1.5 }, 'start+=2.5');
 
         ScrollTrigger.sort();
     });
