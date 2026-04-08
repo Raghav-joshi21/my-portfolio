@@ -53,41 +53,13 @@
     <main id="main-wrapper">
         <!-- Hero Section -->
         <section id="hero" class="hero-section">
-            <!-- This layer holds the white background and gets the triangle clip -->
-            <div class="hero-mask-bg"></div>
-            
-            <div class="hero-inner">
-                <div class="hero-text-stage">
-                    <span class="hero-line line-1">SCALABLE</span>
-                    <span class="hero-line line-2">SYSTEMS</span>
-                </div>
-
-                <div class="hero-hidden-stage">
-                    <span class="hero-hidden-line">CI/CD PIPELINES</span>
-                    <span class="hero-hidden-line">KUBERNETES</span>
-                    <span class="hero-hidden-line">CLOUD ARCHITECTURE</span>
-                    <span class="hero-hidden-line">AUTOMATION</span>
-                </div>
-
-                <div class="hero-scroll-hint">Scroll down for more ↓</div>
-            </div>
-
-            <!-- This layer is ON TOP of the triangle window -->
-            <div class="hero-front-content">
-                <div class="hero-name-portrait-reveal">
-                    <img src="RAGHAV JOSHI.png" alt="Raghav Joshi" class="front-portrait">
-                    <div class="front-name-text">
-                        <span class="letter">R</span><span class="letter">A</span><span class="letter">G</span><span class="letter">H</span><span class="letter">A</span><span class="letter">V</span>
-                        <span class="letter">&nbsp;</span>
-                        <span class="letter">J</span><span class="letter">O</span><span class="letter">S</span><span class="letter">H</span><span class="letter">I</span>
-                    </div>
-                </div>
-            </div>
+            <div id="hero-zoom-overlay" class="hero-zoom-overlay"></div>
+            <div class="hero-text-stage" id="hero-text-stage"></div>
+            <div class="hero-scroll-hint">Scroll ↘</div>
         </section>
 
-        <!-- Name Reveal Section (Backdrop) -->
+        <!-- Name Reveal Section -->
         <section id="name-reveal" class="name-reveal-section" data-theme="dark">
-             <!-- Still has the full Raghav section for later scroll, but the hero covers it initially -->
             <div class="name-reveal-bg-pattern"></div>
             <!-- Huge background text: RAGHAV JOSHI -->
             <div class="name-text-mask top-text-mask">
