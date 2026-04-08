@@ -37,14 +37,14 @@
         </div>
     </nav>
 
-    <!-- SVG clip-path for hero inverted triangle — GSAP shrinks this to a center point -->
+    <!-- SVG clip-path for black-corners inverted triangle (even-odd rect + triangle hole) -->
     <svg width="0" height="0" style="position:absolute;overflow:hidden;pointer-events:none">
         <defs>
-            <clipPath id="hero-tri-clip" clipPathUnits="objectBoundingBox">
-                <!-- Large rounded triangle that extends far beyond all screen edges -->
-                <!-- GSAP animates 'd' to collapse to center, revealing name-reveal in corners -->
-                <path id="hero-tri-path"
-                    d="M 0.50 -0.60 Q 0.50 -0.90 0.85 -0.15 L 1.75 1.65 Q 1.95 1.95 1.40 1.95 L -0.40 1.95 Q -0.95 1.95 -0.75 1.65 L 0.15 -0.15 Q 0.50 -0.90 0.50 -0.60"/>
+            <!-- even-odd: rect makes everything opaque; triangle sub-path punches a transparent hole -->
+            <!-- The hole SHRINKS from large (mostly transparent center) to tiny point (full black) -->
+            <clipPath id="corners-mask" clipPathUnits="objectBoundingBox">
+                <path id="corners-path" fill-rule="evenodd"
+                    d="M 0 0 L 1 0 L 1 1 L 0 1 Z M 0.50 -0.60 Q 0.50 -0.90 0.85 -0.15 L 1.75 1.65 Q 1.95 1.95 1.40 1.95 L -0.40 1.95 Q -0.95 1.95 -0.75 1.65 L 0.15 -0.15 Q 0.50 -0.90 0.50 -0.60"/>
             </clipPath>
         </defs>
     </svg>
@@ -60,49 +60,57 @@
 
         <!-- Name Reveal Section -->
         <section id="name-reveal" class="name-reveal-section" data-theme="dark">
-            <div class="name-reveal-bg-pattern"></div>
-            <!-- Huge background text: RAGHAV JOSHI -->
-            <div class="name-text-mask top-text-mask">
-                <div class="name-bg-text top-text">
-                    <span>R</span><span>A</span><span>G</span><span>H</span><span>A</span><span>V</span>
-                    <span>&nbsp;</span>
-                    <span>J</span><span>O</span><span>S</span><span>H</span><span>I</span>
+
+            <!-- Black overlay with even-odd SVG clip: corners=black, center=transparent (shows hero below) -->
+            <!-- GSAP shrinks the triangle hole so corners eat the center → full reveal -->
+            <div id="tri-overlay"></div>
+
+            <!-- All Raghav content is above the overlay (z-index: 10) so always visible -->
+            <div class="nr-content">
+                <div class="name-reveal-bg-pattern"></div>
+                <!-- Huge background text: RAGHAV JOSHI -->
+                <div class="name-text-mask top-text-mask">
+                    <div class="name-bg-text top-text">
+                        <span>R</span><span>A</span><span>G</span><span>H</span><span>A</span><span>V</span>
+                        <span>&nbsp;</span>
+                        <span>J</span><span>O</span><span>S</span><span>H</span><span>I</span>
+                    </div>
                 </div>
-            </div>
 
-            <!-- Central Image -->
-            <div class="name-reveal-image-container">
-                <img src="RAGHAV JOSHI.png" alt="Raghav Joshi" class="name-image">
-            </div>
-
-            <!-- Floating Texts -->
-            <div class="floating-texts">
-                <div class="float-item float-1">SCALABLE INFRASTRUCTURE</div>
-                <div class="float-item float-3">SYSTEM DESIGN</div>
-                <div class="float-item float-5">CLOUD &amp; AUTOMATION</div>
-                <div class="float-item float-6">CI CD PIPELINES</div>
-                <div class="float-item float-7">AI AGENTS</div>
-                
-                <!-- Fly-past Background Items -->
-                <div class="fly-item fly-1">AI AGENTS</div>
-                <div class="fly-item fly-2">DEVOPS ENGINEER</div>
-                <div class="fly-item fly-5">JENKINS</div>
-                <div class="fly-item fly-6">KUBERNETES</div>
-
-                <div class="text-description float-item">
-                    Building at the intersection of DevOps, cloud architecture, and AI integrations.<br><br>
-                    Crafting robust ecosystems that scale effortlessly.
+                <!-- Central Image -->
+                <div class="name-reveal-image-container">
+                    <img src="RAGHAV JOSHI.png" alt="Raghav Joshi" class="name-image">
                 </div>
-            </div>
 
-            <!-- Huge background text: DevOps Engineer -->
-            <div class="name-text-mask bottom-text-mask">
-                <div class="name-bg-text bottom-text">
-                    <span>D</span><span>e</span><span>v</span><span>O</span><span>p</span><span>s</span>
-                    <span>&nbsp;</span>
-                    <span>E</span><span>n</span><span>g</span><span>i</span><span>n</span><span>e</span><span>e</span><span>r</span>
+                <!-- Floating Texts -->
+                <div class="floating-texts">
+                    <div class="float-item float-1">SCALABLE INFRASTRUCTURE</div>
+                    <div class="float-item float-3">SYSTEM DESIGN</div>
+                    <div class="float-item float-5">CLOUD &amp; AUTOMATION</div>
+                    <div class="float-item float-6">CI CD PIPELINES</div>
+                    <div class="float-item float-7">AI AGENTS</div>
+
+                    <!-- Fly-past Background Items -->
+                    <div class="fly-item fly-1">AI AGENTS</div>
+                    <div class="fly-item fly-2">DEVOPS ENGINEER</div>
+                    <div class="fly-item fly-5">JENKINS</div>
+                    <div class="fly-item fly-6">KUBERNETES</div>
+
+                    <div class="text-description float-item">
+                        Building at the intersection of DevOps, cloud architecture, and AI integrations.<br><br>
+                        Crafting robust ecosystems that scale effortlessly.
+                    </div>
                 </div>
-            </div>
+
+                <!-- Huge background text: DevOps Engineer -->
+                <div class="name-text-mask bottom-text-mask">
+                    <div class="name-bg-text bottom-text">
+                        <span>D</span><span>e</span><span>v</span><span>O</span><span>p</span><span>s</span>
+                        <span>&nbsp;</span>
+                        <span>E</span><span>n</span><span>g</span><span>i</span><span>n</span><span>e</span><span>e</span><span>r</span>
+                    </div>
+                </div>
+            </div><!-- /.nr-content -->
         </section>
 
         <!-- ══ Construction / Projects Scene ══ -->
