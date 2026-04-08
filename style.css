@@ -238,26 +238,15 @@ body.theme-dark .logo-box {
     font-family: 'Plus Jakarta Sans', sans-serif;
 }
 
+
 /* ── Name Reveal Section ── */
-* { margin: 0; padding: 0; box-sizing: border-box; }
-
-html {
-    scroll-behavior: auto;
-}
-
-body {
-    background: #000;  /* black backdrop: shows through hero clip corners + name-reveal transparent bg */
-    overflow-x: hidden;
-    font-family: 'Archivo Black', sans-serif;
-}
-
 .name-reveal-section {
     height: 100vh;
     position: relative;
     overflow: hidden;
     color: #fff;
     font-family: 'Archivo Black', sans-serif;
-    z-index: 20;    /* Sits ON TOP of hero */
+    z-index: 20;    /* Sits ON TOP of hero letters */
     background: transparent;
     display: flex;
     align-items: center;

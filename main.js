@@ -148,13 +148,13 @@ function initNameRevealAnimation() {
                 attr: {
                     d: 'M 0 0 L 1 0 L 1 1 L 0 1 Z M 0.50 0.50 Q 0.50 0.50 0.50 0.50 L 0.50 0.50 Q 0.50 0.50 0.50 0.50 L 0.50 0.50 Q 0.50 0.50 0.50 0.50 L 0.50 0.50 Q 0.50 0.50 0.50 0.50'
                 },
-                duration: 2,
-                ease: 'power2.in',
+                duration: 2.5,
+                ease: 'power2.inOut',
             }, 'start');
         }
 
         // Portrait rises ON TOP (it is outside the clip mask)
-        tl.to(imgContainer, { scale:1, yPercent:0, opacity:1, duration:1.5, ease:'power2.out' }, 'start+=0.5');
+        tl.to(imgContainer, { scale:1, yPercent:0, opacity:1, duration:1.5, ease:'power2.out' }, 'start+=1');
 
 
         // RAGHAV JOSHI wave in
