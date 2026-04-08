@@ -1,2 +1,10 @@
 node_modules/
 1.mp4
+
+# Large media files
+*.mp4
+*.mov
+*.mp3
+*.wav
+# Nested git repos
+"construction design/portfolio-app"
