@@ -83,10 +83,13 @@ function initHeroScrollAnimation() {
             };
         });
 
+        // Hidden letters are those from the "hidden stage" that scatter
         gsap.set(hiddenLetters, { opacity: 0 });
 
-        // Apply the SVG clip-path to hero — it starts as a huge triangle (hero fully visible)
-        gsap.set(heroEl, { clipPath: 'url(#hero-tri-clip)' });
+        // Select the new layers
+        const maskBg = heroEl.querySelector('.hero-mask-bg');
+        const frontImg = heroEl.querySelector('.front-portrait');
+        const frontLetters = heroEl.querySelectorAll('.front-name-text .letter');
 
         const tl = gsap.timeline({
             scrollTrigger: {
@@ -95,7 +98,7 @@ function initHeroScrollAnimation() {
                 end: '+=350%',   // long enough for scatter + triangle collapse
                 scrub: 0.8,
                 pin: true,
-                pinSpacing: false,  // name-reveal floats up BEHIND the hero visually
+                pinSpacing: false,  // name-reveal backdrop section floats up behind
             },
         });
 
@@ -107,9 +110,7 @@ function initHeroScrollAnimation() {
         // Phase B: Brief hold (1.0→1.4)
         tl.to({}, { duration: 0.4 });
 
-        // Phase C: Rounded triangle SHRINKS from full-screen to center point (1.4→3.4)
-        // Corners become black = name-reveal shows through the clipped-away areas
-        // Same path structure: M Q L Q L Q L Q (8 commands, GSAP interpolates smoothly)
+        // Phase C: Rounded triangle hole SHRINKS from full-screen to center point (1.4→3.4)
         if (triPath) {
             tl.to(triPath, {
                 attr: {
@@ -117,8 +118,12 @@ function initHeroScrollAnimation() {
                 },
                 duration: 2,
                 ease: 'power2.in',
-            }, 1.4);  // starts after scatter+hold
+            }, 1.4);
         }
+
+        // Phase D: Reveal Raghav Portrait + Name ON TOP (1.6→3.0)
+        tl.to(frontImg, { opacity: 1, scale: 1.05, y: -20, duration: 1.2, ease: 'back.out(1.7)' }, 1.6);
+        tl.to(frontLetters, { opacity: 1, y: 0, stagger: 0.05, duration: 1, ease: 'power2.out' }, 1.8);
     });
 }
 
