@@ -28,6 +28,7 @@ body {
     -webkit-font-smoothing: antialiased;
     overflow-x: hidden;
     line-height: normal;
+    background: #000; /* Backdrop for the hero windows corners */
     transition: var(--transition-theme);
 }
 
@@ -248,7 +249,8 @@ body.theme-dark .logo-box {
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 100;    /* sits BELOW hero — revealed in corners as hero's triangle shrinks */
+    z-index: 300;    /* ON TOP of hero (200) — portrait and text render above the triangle edge */
+    background: transparent; /* transparent so hero letters still show through the triangle center */
 }
 
 .name-reveal-bg-pattern {
