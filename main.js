@@ -32,19 +32,16 @@ document.addEventListener('DOMContentLoaded', () => {
     initNameRevealAnimation();
 });
 
-// ── Hero: "Creativity is my craft" visible → 1st scroll: hold → 2nd scroll: scatter → "y" zooms black ──
+// ── Hero: letters scatter → diamond clip-path wipes to black → name-reveal rises ──
 function initHeroScrollAnimation() {
     const stage = document.getElementById('hero-text-stage');
     if (!stage) return;
 
-    // Visible text (shown in viewport on load)
     const VISIBLE_LINES = ['Creativity is', 'my craft'];
-    // Extra text (below fold, hidden — letters appear during scatter)
     const HIDDEN_LINES  = ['abstract thinking is', 'my passion'];
 
     const visibleLetters = [];
     const hiddenLetters  = [];
-    let zoomEl = null;     // will point to 'y' of 'my'
     let lineIdx = 0;
 
     function buildLine(text, parent, arr) {
@@ -60,8 +57,6 @@ function initHeroScrollAnimation() {
                 const s = document.createElement('span');
                 s.className = 'hero-letter';
                 s.textContent = ch;
-                // 'y' = visible line 1 ("my craft"), char index 1
-                if (lineIdx === 1 && charIdx === 1) zoomEl = s;
                 charIdx++;
                 line.appendChild(s);
                 arr.push(s);
@@ -73,13 +68,11 @@ function initHeroScrollAnimation() {
 
     VISIBLE_LINES.forEach(l => buildLine(l, stage, visibleLetters));
 
-    // Hidden stage placed below viewport (clipped by overflow:hidden on hero)
     const hiddenStage = document.createElement('div');
     hiddenStage.className = 'hero-hidden-stage';
     HIDDEN_LINES.forEach(l => buildLine(l, hiddenStage, hiddenLetters));
     document.getElementById('hero').appendChild(hiddenStage);
 
-    // Wait for fonts + layout before measuring positions
     const ready = Promise.race([
         document.fonts.ready,
         new Promise(r => setTimeout(r, 600)),
@@ -90,82 +83,67 @@ function initHeroScrollAnimation() {
         const vh = window.innerHeight;
         const allLetters = [...visibleLetters, ...hiddenLetters];
 
-        // Pre-compute scatter destinations + continued drift during zoom
+        // Scatter destinations
         const scatter = allLetters.map(el => {
             const rect = el.getBoundingClientRect();
             const tx = (Math.random() * 0.82 + 0.05) * vw - rect.left;
             const ty = (Math.random() * 0.82 + 0.05) * vh - rect.top;
             const r  = (Math.random() - 0.5) * 130;
-            // Continue drifting outward during zoom phase (same direction, further)
-            const dx = tx + (tx >= 0 ? 1 : -1) * (0.15 + Math.random() * 0.25) * vw;
-            const dy = ty + (ty >= 0 ? 1 : -1) * (0.15 + Math.random() * 0.25) * vh;
-            const dr = r  + (Math.random() - 0.5) * 90;
-            return { el, tx, ty, r, dx, dy, dr };
+            return { el, tx, ty, r };
         });
 
-        const zoomDat = scatter.find(d => d.el === zoomEl);
-        const others  = scatter.filter(d => d.el !== zoomEl);
+        // ── Diamond wipe overlay ──
+        // Build a black div with a diamond-shaped transparent window via clip-path
+        // clip-path describes the VISIBLE region (the diamond hole) — rest is opaque
+        const wipeOverlay = document.createElement('div');
+        wipeOverlay.id = 'diamond-wipe';
+        wipeOverlay.style.cssText = `
+            position: absolute; inset: 0; z-index: 50; pointer-events: none;
+            background: #000; opacity: 0;
+            clip-path: polygon(50% -80%, 180% 50%, 50% 180%, -80% 50%);
+        `;
+        document.getElementById('hero').appendChild(wipeOverlay);
 
-        const overlay = document.getElementById('hero-zoom-overlay');
-
-        // Initial state: hidden letters invisible
         gsap.set(hiddenLetters, { opacity: 0 });
-        if (overlay) gsap.set(overlay, { opacity: 0 });
 
         const tl = gsap.timeline({
             scrollTrigger: {
                 trigger: '#hero',
                 start: 'top top',
-                end: '+=160%',   // Reduced from 220% to tighten section transition after zoom
+                end: '+=200%',
                 scrub: 0.8,
                 pin: true,
             },
         });
 
-        // ── Scatter starts immediately ──
-        const scatterAt = 0;
-
-        // ── Scatter: all letters fly at once ──
-        [...others, zoomDat].filter(Boolean).forEach(({ el, tx, ty, r }) => {
-            tl.to(el, {
-                x: tx, y: ty, rotation: r,
-                opacity: 1,
-                duration: 1,
-                ease: 'expo.out',
-            }, scatterAt);
+        // Phase 1: Letters scatter
+        scatter.forEach(({ el, tx, ty, r }) => {
+            tl.to(el, { x: tx, y: ty, rotation: r, opacity: 1,
+                duration: 1, ease: 'expo.out' }, 0);
         });
 
-        // ── Brief hold at scattered state ──
+        // Brief hold
         tl.to({}, { duration: 0.3 });
 
-        const zoomAt = tl.duration();
+        const wipeAt = tl.duration();
 
-        // ── 'y' zooms to fill screen ──
-        tl.to(zoomEl, {
-            scale: 80,
-            duration: 1,
-            ease: 'power3.in',
-        }, zoomAt);
+        // Phase 2: Diamond overlay fades in, letters fade out
+        tl.to(wipeOverlay, { opacity: 1, duration: 0.3, ease: 'none' }, wipeAt);
+        tl.to(allLetters,  { opacity: 0, duration: 0.4, ease: 'power2.in' }, wipeAt);
 
-        // ── Other letters drift outward during zoom ──
-        others.forEach(({ el, dx, dy, dr }) => {
-            tl.to(el, {
-                x: dx, y: dy, rotation: dr,
-                duration: 1,
-                ease: 'sine.in',
-            }, zoomAt);
-        });
-
-        // ── Black overlay ──
-        if (overlay) {
-            tl.to(overlay, {
-                opacity: 1,
-                duration: 0.6,
-                ease: 'power3.in',
-            }, zoomAt + 0.1); // Slightly sooner
-        }
+        // Phase 3: Diamond window SHRINKS — clip-path polygon collapses to center point
+        // Start: diamond extends 80% beyond screen edges (full window visible)
+        // End:   diamond collapses to center — full black screen
+        tl.fromTo(wipeOverlay,
+            { clipPath: 'polygon(50% -80%, 180% 50%, 50% 180%, -80% 50%)' },
+            { clipPath: 'polygon(50% 50%, 50% 50%, 50% 50%, 50% 50%)',
+              duration: 1.4, ease: 'power2.in' },
+            wipeAt + 0.1
+        );
     });
 }
+
+
 
 function initNameRevealAnimation() {
     const ready = Promise.race([
