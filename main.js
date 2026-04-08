@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initNameRevealAnimation();
 });
 
-// ── Hero: letters scatter on scroll → fade → hero unpins cleanly ──
+// ── Hero: scatter → SVG rounded-triangle shrinks from corners → reveals name-reveal below ──
 function initHeroScrollAnimation() {
     const stage = document.getElementById('hero-text-stage');
     if (!stage) return;
@@ -69,7 +69,10 @@ function initHeroScrollAnimation() {
     ready.then(() => {
         const vw = window.innerWidth, vh = window.innerHeight;
         const allLetters = [...visibleLetters, ...hiddenLetters];
+        const heroEl = document.getElementById('hero');
+        const triPath = document.getElementById('hero-tri-path');
 
+        // Scatter destinations
         const scatter = allLetters.map(el => {
             const rect = el.getBoundingClientRect();
             return {
@@ -82,24 +85,40 @@ function initHeroScrollAnimation() {
 
         gsap.set(hiddenLetters, { opacity: 0 });
 
+        // Apply the SVG clip-path to hero — it starts as a huge triangle (hero fully visible)
+        gsap.set(heroEl, { clipPath: 'url(#hero-tri-clip)' });
+
         const tl = gsap.timeline({
             scrollTrigger: {
                 trigger: '#hero',
                 start: 'top top',
-                end: '+=300%',
+                end: '+=350%',   // long enough for scatter + triangle collapse
                 scrub: 0.8,
                 pin: true,
-                pinSpacing: false,  // ← no spacer: name-reveal floats up behind hero
+                pinSpacing: false,  // name-reveal floats up BEHIND the hero visually
             },
         });
 
-        // Letters scatter and HOLD — visible behind name-reveal's triangle clip
+        // Phase A: Letters scatter (0→1.0)
         scatter.forEach(({ el, tx, ty, r }) => {
             tl.to(el, { x: tx, y: ty, rotation: r, opacity: 1, duration: 1, ease: 'expo.out' }, 0);
         });
 
-        // Brief hold — letters stay scattered throughout name-reveal transition
+        // Phase B: Brief hold (1.0→1.4)
         tl.to({}, { duration: 0.4 });
+
+        // Phase C: Rounded triangle SHRINKS from full-screen to center point (1.4→3.4)
+        // Corners become black = name-reveal shows through the clipped-away areas
+        // Same path structure: M Q L Q L Q L Q (8 commands, GSAP interpolates smoothly)
+        if (triPath) {
+            tl.to(triPath, {
+                attr: {
+                    d: 'M 0.50 0.50 Q 0.50 0.50 0.50 0.50 L 0.50 0.50 Q 0.50 0.50 0.50 0.50 L 0.50 0.50 Q 0.50 0.50 0.50 0.50 L 0.50 0.50 Q 0.50 0.50 0.50 0.50'
+                },
+                duration: 2,
+                ease: 'power2.in',
+            }, 1.4);  // starts after scatter+hold
+        }
     });
 }
 
@@ -120,14 +139,9 @@ function initNameRevealAnimation() {
         const floats        = section.querySelectorAll('.float-item');
         const desc          = section.querySelector('.text-description');
 
-        // ── PHASE 0: Triangle clip starts as a tiny center point ──
-        // The entire name-reveal section is revealed through this growing triangle
-        // Triangle points upward (apex at top-center) matching the reference
-        const TRI_START = 'polygon(50% 50%, 50% 50%, 50% 50%)';
-        const TRI_END   = 'polygon(50% -120%, 170% 160%, -70% 160%)';
-        gsap.set(section, { clipPath: TRI_START });
-
-        // Content initial states (hidden, will wave in mid-triangle-expansion)
+        // No clip-path on name-reveal — it sits fully below the hero
+        // The hero's SVG triangle clip reveals MORE of this section as it shrinks
+        // Content starts hidden, waves in mid-way through the hero collapse
         gsap.set(imgContainer,  { scale: 0.7, yPercent: 40, opacity: 0 });
         gsap.set(topLetters,    { yPercent: 105 });
         gsap.set(bottomLetters, { yPercent: 105 });
@@ -137,39 +151,32 @@ function initNameRevealAnimation() {
             scrollTrigger: {
                 trigger: '#name-reveal',
                 start: 'top top',
-                end: '+=400%',   // Extended to fit triangle expand + full content reveal
+                end: '+=350%',
                 scrub: 1,
                 pin: true,
             }
         });
 
-        // ── PHASE 0: Triangle grows from tiny point to full screen ──
-        tl.to(section, {
-            clipPath: TRI_END,
-            duration: 2,
-            ease: 'power2.out'
-        }, 'start');
+        // Portrait rises as hero triangle is mid-collapse (black corners already visible)
+        tl.to(imgContainer, { scale:1, yPercent:0, opacity:1, duration:1.5, ease:'power2.out' }, 'start');
 
-        // ── PHASE 1: Portrait rises as triangle is mid-expand ──
-        tl.to(imgContainer, { scale:1, yPercent:0, opacity:1, duration:1.5, ease:'power2.out' }, 'start+=1');
-
-        // ── PHASE 2: RAGHAV JOSHI wave in ──
+        // RAGHAV JOSHI wave in
         tl.to(topLetters, {
             yPercent:0, stagger:{ each:0.05, from:'start' }, duration:1, ease:'power2.out'
-        }, 'start+=2');
+        }, 'start+=1.2');
 
-        // ── PHASE 3: Labels + description ──
-        tl.to([desc, ...floats], { opacity:1, y:0, stagger:0.1, duration:1, ease:'power1.out' }, 'start+=2.2');
+        // Labels + description
+        tl.to([desc, ...floats], { opacity:1, y:0, stagger:0.1, duration:1, ease:'power1.out' }, 'start+=1.4');
 
-        // ── PHASE 4: DEVOPS ENGINEER ──
+        // DEVOPS ENGINEER
         tl.to(bottomLetters, {
             yPercent:0, stagger:{ each:0.05, from:'start' }, duration:1, ease:'power2.out'
-        }, 'start+=3.5');
+        }, 'start+=2.5');
 
         // Subtle parallax hold
-        tl.to(imgContainer,  { yPercent:-5,  duration:1.5 }, 'start+=2.5');
-        tl.to(topLetters,    { yPercent:-10, duration:1.5 }, 'start+=2.5');
-        tl.to(bottomLetters, { yPercent:10,  duration:1.5 }, 'start+=2.5');
+        tl.to(imgContainer,  { yPercent:-5,  duration:1.5 }, 'start+=2');
+        tl.to(topLetters,    { yPercent:-10, duration:1.5 }, 'start+=2');
+        tl.to(bottomLetters, { yPercent:10,  duration:1.5 }, 'start+=2');
 
         ScrollTrigger.sort();
     });

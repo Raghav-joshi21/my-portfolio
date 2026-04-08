@@ -37,6 +37,18 @@
         </div>
     </nav>
 
+    <!-- SVG clip-path for hero inverted triangle — GSAP shrinks this to a center point -->
+    <svg width="0" height="0" style="position:absolute;overflow:hidden;pointer-events:none">
+        <defs>
+            <clipPath id="hero-tri-clip" clipPathUnits="objectBoundingBox">
+                <!-- Large rounded triangle that extends far beyond all screen edges -->
+                <!-- GSAP animates 'd' to collapse to center, revealing name-reveal in corners -->
+                <path id="hero-tri-path"
+                    d="M 0.50 -0.60 Q 0.50 -0.90 0.85 -0.15 L 1.75 1.65 Q 1.95 1.95 1.40 1.95 L -0.40 1.95 Q -0.95 1.95 -0.75 1.65 L 0.15 -0.15 Q 0.50 -0.90 0.50 -0.60"/>
+            </clipPath>
+        </defs>
+    </svg>
+
     <!-- Main Wrapper for Smooth Scroll (Lenis) -->
     <main id="main-wrapper">
         <!-- Hero Section -->
