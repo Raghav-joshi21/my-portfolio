@@ -318,6 +318,7 @@ body.theme-dark .logo-box {
     display: inline-block;
 }
 
+
 .name-reveal-image-container {
     position: absolute;
     top: 75%; /* Shifted down by 10% from 65% */
@@ -401,9 +402,77 @@ body.theme-dark .logo-box {
 .float-1 { top: 40%; left: 27%; font-size: 0.9rem; color: #9fc7ff; }
 .float-3 { top: 78%; left: 16%; font-size: 0.9rem; color: #fff; }
 .float-5 { top: 78%; left: 60%; font-size: 0.9rem; color: #fff; }
-/* NEW: Left side labels — DEVOPS ENGINEERING and AI AGENTS */
-.float-6 { top: 55%; left: 5%; font-size: 0.9rem; color: #fff; } /* DEVOPS ENGINEERING */
-.float-7 { top: 68%; left: 8%; font-size: 0.9rem; color: #9fc7ff; } /* AI AGENTS */
+.float-6 { top: 55%; left: 25%; font-size: 0.9rem; color: #fff; }         /* CI CD PIPELINES */
+.float-7 { top: 68%; left: auto; right: 3%; font-size: 0.9rem; color: #9fc7ff; } /* AI AGENTS — far right */
+
+/* ═══════════════════════════════════════
+   Construction Scene Styles (cs- prefix)
+═══════════════════════════════════════ */
+.construction-reveal-wrapper { background:#000; overflow:hidden; }
+.construction-scene-section {
+    position:relative; width:100%; height:100vh;
+    overflow:hidden; background-color:#0b0e14; will-change:transform;
+}
+.cs-bg {
+    position:absolute; top:0; left:0; width:100%; height:100%;
+    object-fit:cover; object-position:bottom center; z-index:1; image-rendering:pixelated;
+}
+.cs-ui-layer {
+    position:absolute; top:0; left:0; width:100%; height:100%;
+    z-index:10; padding:1.5rem 5rem; pointer-events:none; display:flex; align-items:flex-start;
+}
+.cs-hero-text { pointer-events:auto; width:100%; display:flex; flex-direction:column; align-items:flex-start; }
+.cs-hero-left { width:100%; }
+.cs-below-heading { margin-top:7rem; display:flex; flex-direction:column; gap:0.5rem; max-width:520px; }
+.cs-heading {
+    font-family:'Pixelify Sans','Archivo Black',cursive;
+    font-size:clamp(2.5rem,4.5vw,5.5rem);
+    line-height:1.1; font-weight:700; letter-spacing:-0.02em; color:#fff; white-space:nowrap;
+}
+.cs-highlight     { color:#f8c537; }
+.cs-highlight-alt { color:#8b5cf6; }
+.cs-myself {
+    position:absolute; font-family:'Caveat',cursive; font-size:4rem;
+    font-weight:700; color:#f8c537; transform:rotate(-12deg); top:80px; left:0; white-space:nowrap;
+}
+.cs-subtitle { font-family:'Inter',sans-serif; font-size:1.15rem; line-height:1.5; color:rgba(255,255,255,0.8); margin-bottom:1rem; }
+.cs-console {
+    background:#1e1e2e; border:1px solid #45475a; border-radius:8px; padding:1rem;
+    font-family:monospace; font-size:1rem; color:#a6e3a1; margin-bottom:1rem;
+    display:inline-block; min-width:320px; box-shadow:0 10px 30px rgba(0,0,0,0.5);
+}
+.cs-console-header { color:#fff; margin-bottom:0.5rem; }
+.cs-cursor {
+    display:inline-block; width:10px; height:1rem; background:#fff;
+    animation:cs-blink 1s step-end infinite; vertical-align:sub; margin-left:5px;
+}
+@keyframes cs-blink { 0%,100%{opacity:1} 50%{opacity:0} }
+.cs-btn {
+    display:inline-block; background:#5c5cff; color:#fff; border:none; border-radius:8px;
+    padding:0.75rem 1.5rem; font-family:'Inter',sans-serif; font-size:1rem; font-weight:600;
+    cursor:pointer; text-decoration:none; transition:all 0.2s ease;
+    box-shadow:0 4px 15px rgba(92,92,255,0.4); pointer-events:auto;
+}
+.cs-btn:hover { background:#4a4ae6; transform:translateY(-2px); box-shadow:0 6px 20px rgba(92,92,255,0.6); }
+.cs-construction-layer { position:absolute; bottom:0; left:0; width:100%; height:100%; z-index:5; pointer-events:none; }
+.cs-base-left {
+    position:absolute; bottom:-1.9rem; left:0; height:100vh; width:auto;
+    image-rendering:pixelated; pointer-events:none; z-index:5;
+    transform:translate(-9rem,8rem); will-change:transform;
+}
+.cs-building {
+    position:absolute; bottom:0; right:1vw; height:85vh; width:auto;
+    image-rendering:pixelated; pointer-events:none; clip-path:inset(9px); z-index:2;
+}
+.cs-crane {
+    position:absolute; bottom:0; right:-9vw; height:102vh; width:auto;
+    image-rendering:pixelated; pointer-events:none; clip-path:inset(2px); z-index:4;
+    transform-origin:85% 100%; animation:cs-crane-sway 12s ease-in-out infinite; will-change:transform;
+}
+@keyframes cs-crane-sway { 0%{transform:rotate(0deg)} 40%{transform:rotate(1.5deg)} 70%{transform:rotate(-0.5deg)} 100%{transform:rotate(0deg)} }
+#cs-trees-container { position:absolute; bottom:5vh; left:0; width:100%; height:auto; }
+.cs-tree { position:absolute; bottom:0; image-rendering:pixelated; }
+.cs-worker-container { position:absolute; }
 
 
 /* About Section */

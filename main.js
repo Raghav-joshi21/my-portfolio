@@ -28,6 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initTimezoneClock();
     initMagneticButtons();
     initHeroScrollAnimation();
+    initConstructionScene(); // Run FIRST so worker DOM nodes exist
     initNameRevealAnimation();
 });
 
@@ -167,7 +168,6 @@ function initHeroScrollAnimation() {
 }
 
 function initNameRevealAnimation() {
-    // Wait for fonts to load so ScrollTrigger calculates pins in the correct DOM order
     const ready = Promise.race([
         document.fonts.ready,
         new Promise(r => setTimeout(r, 600)),
@@ -177,18 +177,17 @@ function initNameRevealAnimation() {
         const section = document.getElementById('name-reveal');
         if (!section) return;
 
-        const topLetters = section.querySelectorAll('.top-text span');
+        const topLetters    = section.querySelectorAll('.top-text span');
         const bottomLetters = section.querySelectorAll('.bottom-text span');
-        const imgContainer = section.querySelector('.name-reveal-image-container');
-        const img = section.querySelector('.name-image');
-        const floats = section.querySelectorAll('.float-item');
-        const desc = section.querySelector('.text-description');
+        const imgContainer  = section.querySelector('.name-reveal-image-container');
+        const floats        = section.querySelectorAll('.float-item');
+        const desc          = section.querySelector('.text-description');
 
-        // Initial cinematic states based on Monkey Talkie video
-        gsap.set(imgContainer, { scale: 0.7, yPercent: 40, opacity: 0 });
-        gsap.set(topLetters, { yPercent: 105 }); // Corrected: Hiding BELOW the mask to slide UP
-        gsap.set(bottomLetters, { yPercent: 105 }); // Hidden BELOW the mask to slide UP
-        gsap.set([floats, desc], { opacity: 0, y: 20 });
+        // Initial states
+        gsap.set(imgContainer,  { scale: 0.7, yPercent: 40, opacity: 0 });
+        gsap.set(topLetters,    { yPercent: 105 });
+        gsap.set(bottomLetters, { yPercent: 105 });
+        gsap.set([floats, desc],{ opacity: 0, y: 20 });
 
         const tl = gsap.timeline({
             scrollTrigger: {
@@ -200,65 +199,127 @@ function initNameRevealAnimation() {
             }
         });
 
-        // 1. Image Rises and Scales (Must be done before text starts)
-        tl.to(imgContainer, {
-            scale: 1,
-            yPercent: 0,
-            opacity: 1,
-            duration: 1.5,
-            ease: "power2.out"
-        }, "start");
+        // 1. Portrait rises
+        tl.to(imgContainer, { scale:1, yPercent:0, opacity:1, duration:1.5, ease:'power2.out' }, 'start');
 
-        // 2. FIRST: RAGHAV JOSHI Reveal (Starts only once image is up)
+        // 2. RAGHAV JOSHI wave in
         tl.to(topLetters, {
-            yPercent: 0,
-            stagger: {
-                each: 0.05,
-                from: "start"
-            },
-            duration: 1,
-            ease: "power2.out"
-        }, "start+=1.3"); // Wait for image to settle
+            yPercent:0, stagger:{ each:0.05, from:'start' }, duration:1, ease:'power2.out'
+        }, 'start+=1.3');
 
-        // 3. THEN AFTER: DEVOPS ENGINEER Reveal (Delayed until Raghav Joshi is fully out)
+        // 3. Labels fade in
+        tl.to([desc, ...floats], { opacity:1, y:0, stagger:0.1, duration:1, ease:'power1.out' }, 'start+=1.2');
+
+        // 4. DEVOPS ENGINEER wave in
         tl.to(bottomLetters, {
-            yPercent: 0,
-            stagger: {
-                each: 0.05,
-                from: "start"
-            },
-            duration: 1,
-            ease: "power2.out"
-        }, "start+=3.5"); // Substantial delay to ensure previous text is fully seen first
+            yPercent:0, stagger:{ each:0.05, from:'start' }, duration:1, ease:'power2.out'
+        }, 'start+=3.5');
 
-        // 3. Labels and Description Fade-In (Staggered red text)
-        tl.to([desc, ...floats], {
-            opacity: 1,
-            y: 0,
-            stagger: 0.1,
-            duration: 1,
-            ease: "power1.out"
-        }, "start+=1.2");
+        // 5. Subtle parallax hold
+        tl.to(imgContainer,  { yPercent:-5,  duration:1.5 }, 'start+=2');
+        tl.to(topLetters,    { yPercent:-10, duration:1.5 }, 'start+=2');
+        tl.to(bottomLetters, { yPercent:10,  duration:1.5 }, 'start+=2');
 
-        // 4. Subtle Parallax on scroll continue
-        tl.to(imgContainer, { yPercent: -5, duration: 2 }, "start+=2");
-        tl.to(topLetters, { yPercent: -15, duration: 2 }, "start+=2");
-        tl.to(bottomLetters, { yPercent: 15, duration: 2 }, "start+=2");
-
-        // 6. PHASE TWO: The skill items emerge sequentially AFTER the layout settles!
-        tl.to(flyItems, {
-            keyframes: [
-                // Phase 1: Emerge from deep space and come into focus close to camera
-                { opacity: 1, z: 200, scale: 1.5, filter: 'blur(0px)', duration: 2.5, ease: 'power2.out' },
-                // Phase 2: Violently accelerate past camera lens, get massive, and disappear
-                { opacity: 0, z: 1500, scale: 10, filter: 'blur(20px)', duration: 1.5, ease: 'power3.in' }
-            ],
-            stagger: 0.5 // Ultra wide stagger for prominent solo display
-        }, "start+=3.5"); // Starts way after the initial texts ascend
-
-        // Assure correct scroll ordering
         ScrollTrigger.sort();
     });
+}
+
+
+// ── Construction Scene: Worker Sprites ──
+function initConstructionScene() {
+    const scene = document.getElementById('construction-scene');
+    if (!scene) return;
+    const layer = scene.querySelector('.cs-construction-layer');
+    if (!layer) return;
+
+    function makeWorker(config) {
+        const wrap = document.createElement('div');
+        wrap.className = 'cs-worker-container';
+        wrap.style.cssText = `position:absolute; left:${config.left}; bottom:${config.bottom}; z-index:${config.zIndex||8};`;
+
+        const img = document.createElement('img');
+        img.style.cssText = `height:${config.size}; image-rendering:pixelated; pointer-events:none; transform:${config.flip ? 'scaleX(-1)' : 'none'};`;
+
+        const bubble = document.createElement('div');
+        bubble.style.cssText = `position:absolute; top:-5vh; left:50%; transform:translateX(-50%); background:white; color:#111; padding:0.4rem 0.8rem; border-radius:15px; font-family:'Caveat',cursive; font-size:1.1rem; font-weight:bold; white-space:nowrap; opacity:0; transition:opacity 0.2s; box-shadow:0 5px 15px rgba(0,0,0,0.3); pointer-events:none;`;
+        if (config.terminalStyle) {
+            Object.assign(bubble.style, { background:'rgba(0,0,0,0.8)', color:'#fff', fontFamily:'"Courier New",monospace', fontSize:'0.9rem', fontWeight:'normal', border:'1px solid transparent' });
+        }
+        wrap.appendChild(img); wrap.appendChild(bubble);
+        layer.appendChild(wrap);
+
+        let moveOffset=0, distanceWalked=0, frameIndex=0;
+        let currentState = config.isStationary ? 'action' : 'walking';
+        let isPaused = false;
+        const walkSeq=config.walkSequence||[], actionSeq=config.actionSequence||[];
+        const walkLimit=config.walkLimit||120;
+        const lazyQ=["watching reels while AI generates...","just one more tiktok...","artificial delegation!"];
+        const devQ=["Oh shit! Forgot to commit!","I pushed to main!!","Who broke the build?!"];
+        const flows=[
+            {error:"> git push [REJECTED]", resolve:"> git pull --rebase ✅"},
+            {error:"> npm run dev ERROR!",  resolve:"> killall node ✅"},
+            {error:"> Merge conflict!",     resolve:"> Resolved manually ✅"}
+        ];
+        img.src=(currentState==='walking'?walkSeq:actionSeq)[0]||'';
+
+        setTimeout(()=>{
+            setInterval(()=>{
+                if(isPaused) return;
+                const seq=(currentState==='walking'||currentState==='running_back'||currentState==='panicking')?walkSeq:actionSeq;
+                if(!seq.length) return;
+                if(currentState==='action'&&frameIndex===seq.length-1){
+                    if(config.isStationary){frameIndex=-1;}
+                    else if(config.behavior==='forgetful_dev'){
+                        currentState='panicking'; img.style.transform='scaleX(-1)';
+                        bubble.innerText=devQ[Math.floor(Math.random()*devQ.length)]; bubble.style.opacity='1';
+                        setTimeout(()=>{currentState='running_back';},1500); frameIndex=-1;
+                    } else { currentState='walking'; frameIndex=-1; distanceWalked=0; }
+                }
+                if(currentState!=='panicking'){ frameIndex=(frameIndex+1)%seq.length; img.src=seq[frameIndex]; }
+                if(config.behavior==='lazy_dev'&&currentState==='action'&&seq[frameIndex]?.includes('20')){
+                    isPaused=true; bubble.innerText=lazyQ[Math.floor(Math.random()*lazyQ.length)]; bubble.style.opacity='1';
+                    setTimeout(()=>{bubble.style.opacity='0';isPaused=false;},4000);
+                }
+                if(config.behavior==='git_workflow'&&currentState==='action'&&seq[frameIndex]?.includes('10')&&Math.random()<0.35){
+                    isPaused=true; const fl=flows[Math.floor(Math.random()*flows.length)];
+                    bubble.style.border='1px solid rgba(255,50,50,0.8)'; bubble.innerText=fl.error; bubble.style.opacity='1';
+                    setTimeout(()=>{ bubble.style.border='1px solid rgba(50,255,50,0.8)'; bubble.innerText=fl.resolve;
+                        setTimeout(()=>{bubble.style.opacity='0';isPaused=false;},2500);
+                    },3500);
+                }
+            },config.frameDelay||300);
+            setInterval(()=>{
+                if(config.isStationary||isPaused||currentState==='panicking') return;
+                if(currentState==='walking'){
+                    moveOffset+=2.0; distanceWalked+=2.0;
+                    wrap.style.marginLeft=`${moveOffset}px`;
+                    if(config.behavior==='vehicle_loop'){
+                        moveOffset+=1.0;
+                        if(moveOffset>window.innerWidth+500) moveOffset=-800;
+                        wrap.style.marginLeft=`${moveOffset}px`; return;
+                    }
+                    const hit=config.behavior==='forgetful_dev'?moveOffset>=walkLimit:distanceWalked>=walkLimit;
+                    if(hit){currentState='action';frameIndex=-1;}
+                } else if(currentState==='running_back'){
+                    moveOffset-=4.5; wrap.style.marginLeft=`${moveOffset}px`;
+                    if(moveOffset<=-300){img.style.transform='none';bubble.style.opacity='0';currentState='walking';distanceWalked=0;}
+                }
+            },30);
+        },config.delayOffset||0);
+    }
+
+    makeWorker({ left:'-15vw',bottom:'5vh',size:'15vh',flip:false,behavior:'forgetful_dev',walkLimit:window.innerWidth*0.40,
+        walkSequence:['https://res.cloudinary.com/dam86kngr/image/upload/v1775566444/sprite_1_thovwa.png','https://res.cloudinary.com/dam86kngr/image/upload/v1775566444/sprite_2_dkynn2.png','https://res.cloudinary.com/dam86kngr/image/upload/v1775566444/sprite_3_agmfgr.png','https://res.cloudinary.com/dam86kngr/image/upload/v1775566444/sprite_4_qy5myo.png'],
+        actionSequence:['https://res.cloudinary.com/dam86kngr/image/upload/v1775566451/sprite_17_ldyqgf.png','https://res.cloudinary.com/dam86kngr/image/upload/v1775566454/sprite_12_w1ilkq.png','https://res.cloudinary.com/dam86kngr/image/upload/v1775566450/sprite_21_gugcd4.png']});
+    makeWorker({ left:'70vw',bottom:'8vh',size:'15vh',flip:true,isStationary:true,behavior:'lazy_dev',frameDelay:2000,delayOffset:400,
+        actionSequence:['https://res.cloudinary.com/dam86kngr/image/upload/v1775566451/sprite_19_y7uwol.png','https://res.cloudinary.com/dam86kngr/image/upload/v1775566450/sprite_21_gugcd4.png','https://res.cloudinary.com/dam86kngr/image/upload/v1775566453/sprite_11_ocyxsh.png','https://res.cloudinary.com/dam86kngr/image/upload/v1775566451/sprite_20_zpzyjr.png']});
+    makeWorker({ left:'60vw',bottom:'38vh',size:'9vh',flip:false,isStationary:true,behavior:'git_workflow',terminalStyle:true,frameDelay:2000,
+        actionSequence:['https://res.cloudinary.com/dam86kngr/image/upload/v1775566451/sprite_18_kdgskv.png','https://res.cloudinary.com/dam86kngr/image/upload/v1775566451/sprite_17_ldyqgf.png','https://res.cloudinary.com/dam86kngr/image/upload/v1775566454/sprite_12_w1ilkq.png','https://res.cloudinary.com/dam86kngr/image/upload/v1775566454/sprite_10_xubdj4.png']});
+    makeWorker({ left:'69.5vw',bottom:'75vh',size:'9vh',flip:true,zIndex:'3',isStationary:true,behavior:'git_workflow',terminalStyle:true,frameDelay:2000,delayOffset:1000,
+        actionSequence:['https://res.cloudinary.com/dam86kngr/image/upload/v1775566451/sprite_18_kdgskv.png','https://res.cloudinary.com/dam86kngr/image/upload/v1775566451/sprite_19_y7uwol.png','https://res.cloudinary.com/dam86kngr/image/upload/v1775566451/sprite_17_ldyqgf.png','https://res.cloudinary.com/dam86kngr/image/upload/v1775566454/sprite_12_w1ilkq.png','https://res.cloudinary.com/dam86kngr/image/upload/v1775566454/sprite_10_xubdj4.png']});
+    makeWorker({ left:'-20vw',bottom:'10vh',size:'22vh',flip:false,zIndex:'1',behavior:'vehicle_loop',frameDelay:150,
+        walkSequence:['https://res.cloudinary.com/dam86kngr/image/upload/v1775566446/sprite_1_jvyr6x.png','https://res.cloudinary.com/dam86kngr/image/upload/v1775566447/sprite_2_ds77bf.png','https://res.cloudinary.com/dam86kngr/image/upload/v1775566446/sprite_3_rtiwnq.png','https://res.cloudinary.com/dam86kngr/image/upload/v1775566449/sprite_4_bemdai.png','https://res.cloudinary.com/dam86kngr/image/upload/v1775566448/sprite_5_i8yob4.png','https://res.cloudinary.com/dam86kngr/image/upload/v1775566448/sprite_6_llqkh7.png','https://res.cloudinary.com/dam86kngr/image/upload/v1775566444/sprite_8_qgaetl.png','https://res.cloudinary.com/dam86kngr/image/upload/v1775566444/sprite_9_fkgyjz.png','https://res.cloudinary.com/dam86kngr/image/upload/v1775566446/sprite_14_qmipy7.png','https://res.cloudinary.com/dam86kngr/image/upload/v1775566447/sprite_15_ocvjw0.png','https://res.cloudinary.com/dam86kngr/image/upload/v1775566446/sprite_16_ftfufw.png','https://res.cloudinary.com/dam86kngr/image/upload/v1775566445/sprite_18_nqimle.png'],
+        actionSequence:[]});
 }
 
 function initCustomCursor() {
