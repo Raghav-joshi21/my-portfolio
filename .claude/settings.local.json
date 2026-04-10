@@ -12,7 +12,9 @@
       "Bash(node:*)",
       "Bash(python3:*)",
       "Bash(sed -i '' 's|'\\\\''FREE_Adventurer%202D%20Pixel%20Art/|'\\\\''../FREE_Adventurer%202D%20Pixel%20Art/|g' '/Users/raghav/portfolio website/test-us/main.js')",
-      "Bash(sed -i '' 's|'\\\\''building%20assests/|'\\\\''../building%20assests/|g' '/Users/raghav/portfolio website/test-us/main.js')"
+      "Bash(sed -i '' 's|'\\\\''building%20assests/|'\\\\''../building%20assests/|g' '/Users/raghav/portfolio website/test-us/main.js')",
+      "Bash(curl -s \"https://www.monkeytalkie.com/\")",
+      "Bash(curl -s \"https://www.monkeytalkie.com/wp-content/themes/monkeytalkie/dist/index.js\")"
     ]
   }
 }
