@@ -30,6 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initHeroScrollAnimation();
     initConstructionScene(); // Run FIRST so worker DOM nodes exist
     initNameRevealAnimation();
+    initCityRevealAnimation();
 });
 
 // ── Hero: scatter → SVG rounded-triangle shrinks from corners → reveals name-reveal below ──
@@ -207,6 +208,28 @@ function initNameRevealAnimation() {
 
         ScrollTrigger.sort();
     });
+}
+
+function initCityRevealAnimation() {
+    const section = document.getElementById('pixel-city-scene');
+    if (!section) return;
+
+    const bg = section.querySelector('.city-static-bg');
+
+    gsap.fromTo(bg, 
+        { yPercent: 20, scale: 1.1 },
+        {
+            yPercent: -10,
+            scale: 1,
+            ease: 'none',
+            scrollTrigger: {
+                trigger: section,
+                start: 'top bottom',
+                end: 'bottom top',
+                scrub: true,
+            }
+        }
+    );
 }
 
 
