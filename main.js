@@ -145,14 +145,12 @@ function initNameRevealAnimation() {
         const imgContainer  = hero.querySelector('.name-reveal-image-container');
         const floats        = hero.querySelectorAll('.float-item');
         const desc          = hero.querySelector('.text-description');
-        const cityBg        = hero.querySelector('.city-bg-container');
 
         // Initial states
         gsap.set(imgContainer,  { scale: 0.7, yPercent: 40, opacity: 0 });
         gsap.set(topLetters,    { yPercent: 105 });
         gsap.set(bottomLetters, { yPercent: 105 });
         gsap.set([floats, desc],{ opacity: 0, y: 20 });
-        gsap.set(cityBg,        { opacity: 0, y: 50 });
 
         // scrub matches hero (0.8) for frame-perfect sync
         const tl = gsap.timeline({
@@ -195,9 +193,6 @@ function initNameRevealAnimation() {
             stagger: { each: 0.02, from: 'start' },
             duration: 0.5, ease: 'power3.out',
         }, 1.5);
-
-        // City Background reveal
-        tl.to(cityBg, { opacity: 1, y: 0, duration: 1.5, ease: 'power2.out' }, 2.4);
 
         // Subtle upward parallax drift as triangle fully closes
         tl.to(imgContainer,  { yPercent: -4, duration: 1.2 }, 2.8);

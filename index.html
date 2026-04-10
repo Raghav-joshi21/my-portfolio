@@ -3,97 +3,83 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Raghav Joshi | Creative Engineer</title>
-    <!-- SEO Meta Tags -->
-    <meta name="description" content="Creative Builder · Software Engineer · Design Engineer. Product, code & craft.">
+    <title>Raghav Joshi | DevOps Engineer & AI Architect</title>
     
-    <!-- Google Fonts -->
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Caveat:wght@700&family=Jersey+10&family=Pixelify+Sans:wght@400;500;700&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Plus+Jakarta+Sans:wght@400;700;800&family=Outfit:wght@400;700;900&family=Jersey+10&family=Caveat:wght@700&display=swap" rel="stylesheet">
     
+    <!-- Design Tokens -->
+    <link rel="stylesheet" href="style.css">
+
     <!-- Libraries -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-    <script src="https://unpkg.com/lenis@1.1.20/dist/lenis.min.js"></script> 
-    
-    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.20/dist/lenis.min.js"></script>
 </head>
-<body class="theme-light overflow-x-hidden">
+<body class="bg-black text-white selection:bg-white selection:text-black">
+    
     <!-- Custom Cursor -->
-    <div id="cursor" class="pointer-events-none fixed left-0 top-0 z-[9999] h-3 w-3 rounded-full bg-primary mix-blend-difference"></div>
+    <div id="cursor" class="pointer-events-none fixed left-0 top-0 z-[9999] h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white mix-blend-difference"></div>
 
     <!-- Navigation -->
     <nav class="main-nav">
-        <div class="nav-left">
-            <a href="/" class="logo-group">
-                <div class="logo-box">R</div>
-                <span class="nav-copyright">©</span>
-                <div class="name-container">
-                    <span class="name-default">coded by Raghav</span>
-                    <span class="name-hover">Joshi</span>
+        <div class="nav-container">
+            <div class="logo-box">
+                <span class="logo-r">R</span>
+            </div>
+            <div class="name-container">
+                <div class="name-slider">
+                    <span class="name-label">coded by Raghav</span>
+                    <span class="name-label">Joshi</span>
                 </div>
-            </a>
+            </div>
         </div>
     </nav>
 
-
-    <!-- Main Wrapper for Smooth Scroll (Lenis) -->
-    <main id="main-wrapper">
-        <!-- Hero Section -->
-        <!--
-            Layering order (top → bottom):
-            z-index 5 : .hero-scroll-hint
-            z-index 4 : .name-reveal-content-overlay  ← image + text, NEVER clipped
-            z-index 2 : #hero-clip-layer               ← white bg + letters, clip-path applied HERE
-            z-index 1 : .name-reveal-bg-pattern        ← decorative texture on black bg
-            background : #hero itself (#000)
-        -->
+    <!-- Main Content Stage -->
+    <main class="main-stage">
+        
+        <!-- Hero Section — contains the scatter text and the name-reveal overlay -->
         <section id="hero" class="hero-section">
-            <!-- Decorative pattern sits on the black background before the clip layer -->
-            <div class="name-reveal-bg-pattern"></div>
-
-            <!-- Clip layer: white background + scattered letters.
-                 clip-path (SVG triangle) is applied to THIS element only. -->
-            <div id="hero-clip-layer">
-                <div id="hero-zoom-overlay" class="hero-zoom-overlay"></div>
-                <div class="hero-text-stage" id="hero-text-stage"></div>
+            <!-- Phase 1: White panel with scattering hero letters -->
+            <div id="hero-clip-layer" class="hero-clip-layer">
+                <div id="hero-text-stage" class="hero-text-stage">
+                    <!-- Letter spans injected via main.js -->
+                </div>
             </div>
-
-            <!-- Content overlay: image + text sit ABOVE the clip layer.
-                 They are never clipped by the triangle — they float in front. -->
+            
+            <!-- Phase 2: Name Reveal Content (Portrait + Huge Text Overlay) 
+                 Positioned absolutely over the clip-layer so it's never cut by the triangle -->
             <div class="name-reveal-content-overlay">
-                <!-- Huge background text: RAGHAV JOSHI -->
+                
+                <!-- Center Portrait -->
+                <div class="name-reveal-image-container">
+                    <img src="RAGHAV JOSHI.png" alt="Raghav Joshi" class="name-reveal-image">
+                </div>
+
+                <!-- Floating Tech Labels -->
+                <div class="float-item float-1">Scalable Infrastructure</div>
+                <div class="float-item float-2">System Design</div>
+                <div class="float-item float-3">Cloud & Automation</div>
+                <div class="float-item float-4">AI Integrations</div>
+                <div class="float-item float-5">Kubernetes</div>
+                <div class="float-item float-6">CI/CD Pipelines</div>
+                <div class="float-item float-7">AI Agents</div>
+
+                <!-- Bio Description -->
+                <div class="text-description">
+                    Building at the intersection of DevOps, cloud architecture, and AI integrations. 
+                    Crafting robust ecosystems that scale effortlessly.
+                </div>
+
+                <!-- Huge background text: Raghav Joshi -->
                 <div class="name-text-mask top-text-mask">
                     <div class="name-bg-text top-text">
                         <span>R</span><span>A</span><span>G</span><span>H</span><span>A</span><span>V</span>
                         <span>&nbsp;</span>
                         <span>J</span><span>O</span><span>S</span><span>H</span><span>I</span>
-                    </div>
-                </div>
-
-                <!-- Central Image -->
-                <div class="name-reveal-image-container">
-                    <img src="RAGHAV JOSHI.png" alt="Raghav Joshi" class="name-image">
-                </div>
-
-                <!-- Floating Texts -->
-                <div class="floating-texts">
-                    <div class="float-item float-1">SCALABLE INFRASTRUCTURE</div>
-                    <div class="float-item float-3">SYSTEM DESIGN</div>
-                    <div class="float-item float-5">CLOUD &amp; AUTOMATION</div>
-                    <div class="float-item float-6">CI CD PIPELINES</div>
-                    <div class="float-item float-7">AI AGENTS</div>
-
-                    <!-- Fly-past Background Items -->
-                    <div class="fly-item fly-1">AI AGENTS</div>
-                    <div class="fly-item fly-2">DEVOPS ENGINEER</div>
-                    <div class="fly-item fly-5">JENKINS</div>
-                    <div class="fly-item fly-6">KUBERNETES</div>
-
-                    <div class="text-description float-item">
-                        Building at the intersection of DevOps, cloud architecture, and AI integrations.<br><br>
-                        Crafting robust ecosystems that scale effortlessly.
                     </div>
                 </div>
 
@@ -111,155 +97,16 @@
         </section>
 
         <!-- Name Reveal Section — provides the scroll space for the hero's transition -->
-        <section id="name-reveal" class="name-reveal-section" data-theme="dark">
-            <div class="city-bg-container">
+        <section id="name-reveal" class="name-reveal-section" data-theme="dark"></section>
+
+        <!-- Dedicated Pixel City Transit Section -->
+        <section id="city-transit" class="city-transit-section">
+            <div class="city-bg-full">
                 <img src="/project page/background.png" alt="Pixel City Night" class="city-static-bg">
-                <div class="city-overlay-vignette"></div>
+                <div class="city-vignette"></div>
             </div>
         </section>
 
-        <!-- ══ Construction / Projects Scene ══ -->
-        <div id="construction-reveal-wrapper" class="construction-reveal-wrapper">
-            <section id="construction-scene" class="construction-scene-section">
-                <img class="cs-bg" src="https://res.cloudinary.com/dam86kngr/image/upload/v1775566450/midnight_bg_xrnmro.png" alt="Construction background" />
-                <div class="cs-ui-layer">
-                    <div class="cs-hero-text">
-                        <div class="cs-hero-left">
-                            <h2 class="cs-heading">See what <span class="cs-highlight">Raghav</span><br>is building with his<br>
-                                <span style="position:relative;display:inline-block;">
-                                    <del style="font-size:1.1em;text-decoration-color:#8b5cf6;text-decoration-thickness:5px;">AI skills</del>
-                                    <span class="cs-myself">myself ⤴</span>
-                                </span>
-                            </h2>
-                            <div class="cs-below-heading">
-                                <p class="cs-subtitle">Turning ideas into <span class="cs-highlight-alt">intelligent</span>,<br><span class="cs-highlight">impactful</span> digital experiences.</p>
-                                <div class="cs-console">
-                                    <div class="cs-console-header">raghav@portfolio:~$</div>
-                                    <div class="cs-console-body">&gt; building the future...<span class="cs-cursor"></span></div>
-                                </div>
-                                <a href="#projects" class="cs-btn">View Projects &rarr;</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="cs-construction-layer">
-                    <div id="cs-trees-container"></div>
-                    <img class="cs-base-left" src="https://res.cloudinary.com/dam86kngr/image/upload/v1775566450/base_iabm0r.png" alt="Base Ground" />
-                    <img class="cs-building" src="https://res.cloudinary.com/dam86kngr/image/upload/v1775566449/building_bmm0md.png" alt="Building" />
-                    <img class="cs-crane" src="https://res.cloudinary.com/dam86kngr/image/upload/v1775566456/crane_fczavt.png" alt="Crane" />
-                </div>
-            </section>
-        </div>
-
-        <!-- About Section -->
-        <section id="about" class="about-section section-padding" data-theme="dark">
-            <div class="container relative flex flex-col md:flex-row items-start justify-between">
-                <div class="about-text-container">
-                    <!-- content coming soon -->
-                </div>
-            </div>
-        </section>
-
-        <!-- Projects Section triggers Theme Swap -->
-        <section id="projects" class="project-section section-padding" data-theme="dark">
-            <div class="container overflow-visible">
-                <h2 class="section-subtitle opacity-50 mb-12 uppercase tracking-widest text-sm font-bold">Selected Projects</h2>
-
-                <div class="project-list">
-                    <!-- Project Box 1 -->
-                    <div class="project-row group" data-preview="https://via.placeholder.com/600x400/21242b/ffffff?text=StyleSync">
-                        <div class="project-title-area">
-                            <span class="project-number font-light opacity-50 mr-8">01</span>
-                            <h3 class="project-name font-bold text-4xl sm:text-6xl">StyleSync</h3>
-                        </div>
-                        <div class="project-meta flex gap-4 text-sm font-semibold opacity-60">
-                            <span>Design Engineer</span>
-                            <span>React</span>
-                        </div>
-                        <div class="project-arrow opacity-0 group-hover:opacity-100 transition-opacity">↗</div>
-                    </div>
-
-                    <!-- Project Box 2 -->
-                    <div class="project-row group" data-preview="https://via.placeholder.com/600x400/d4e3ec/ffffff?text=Catapult">
-                        <div class="project-title-area">
-                            <span class="project-number font-light opacity-50 mr-8">02</span>
-                            <h3 class="project-name font-bold text-4xl sm:text-6xl">Catapult</h3>
-                        </div>
-                        <div class="project-meta flex gap-4 text-sm font-semibold opacity-60">
-                            <span>Founding Engineer</span>
-                            <span>DeFi</span>
-                        </div>
-                        <div class="project-arrow opacity-0 group-hover:opacity-100 transition-opacity">↗</div>
-                    </div>
-
-                    <!-- Project Box 3 -->
-                    <div class="project-row group" data-preview="https://via.placeholder.com/600x400/9289BD/ffffff?text=M31+Controller">
-                        <div class="project-title-area">
-                            <span class="project-number font-light opacity-50 mr-8">03</span>
-                            <h3 class="project-name font-bold text-4xl sm:text-6xl">M31 Controller</h3>
-                        </div>
-                        <div class="project-meta flex gap-4 text-sm font-semibold opacity-60">
-                            <span>Interactive Design</span>
-                            <span>Three.js</span>
-                        </div>
-                        <div class="project-arrow opacity-0 group-hover:opacity-100 transition-opacity">↗</div>
-                    </div>
-                </div>
-
-                <div class="view-all-btn mt-20 flex justify-center">
-                    <a href="/projects" class="pill-btn">View Projects</a>
-                </div>
-            </div>
-
-            <!-- Global Project Hover Preview -->
-            <div id="project-preview" class="pointer-events-none fixed left-0 top-0 z-[50] h-[300px] w-[400px] scale-0 overflow-hidden rounded-xl opacity-0">
-                <img src="" alt="Project Preview" class="h-full w-full object-cover">
-            </div>
-        </section>
-
-        <!-- Footer Section -->
-        <footer id="contact" class="footer-section section-padding" data-theme="dark">
-            <div class="container footer-top">
-                <div class="contact-header relative border-b border-gray-600 pb-12">
-                    <span class="flex items-center">
-                        <div class="profile-image-container relative h-16 w-16 overflow-hidden rounded-full sm:h-[100px] sm:w-[100px]">
-                            <img src="https://via.placeholder.com/200?text=Profile" alt="Raghav Joshi" class="profile-img">
-                        </div>
-                        <h2 class="ml-3 text-xl font-medium sm:text-[5vh]">Let's work together!</h2>
-                    </span>
-
-                    <div class="bubble-btn-container absolute right-0 top-[calc(100%-80px)]">
-                        <a href="mailto:raghav@example.com" class="bubble-btn group">
-                            <span class="relative z-10">Get in touch</span>
-                            <div class="bubble-fill"></div>
-                        </a>
-                    </div>
-                </div>
-
-                <div class="footer-bottom mt-32 flex flex-col justify-between sm:flex-row pb-12 gap-8">
-                    <p class="max-w-[400px] text-base opacity-70">AI/LLM enthusiast | Web3 builder | Passionate about using technology to make the world a better place.</p>
-
-                    <div class="flex gap-16">
-                        <div class="footer-col">
-                            <h3 class="text-gray-500 font-light mb-4 text-sm uppercase tracking-widest">Socials</h3>
-                            <div class="flex gap-4 font-bold">
-                                <a href="#" class="social-link">Twitter</a>
-                                <a href="#" class="social-link">Github</a>
-                                <a href="#" class="social-link">Linkedin</a>
-                            </div>
-                        </div>
-                        <div class="footer-col">
-                            <h3 class="text-gray-500 font-light mb-4 text-sm uppercase tracking-widest">Version</h3>
-                            <p class="font-bold">2026 © Edition</p>
-                        </div>
-                        <div class="footer-col min-w-[200px]">
-                            <h3 class="text-gray-500 font-light mb-4 text-sm uppercase tracking-widest">Timezone</h3>
-                            <p id="timezone-clock" class="font-bold">--:--:-- -- UK (GMT+1)</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </footer>
     </main>
 
     <script type="module" src="main.js"></script>
