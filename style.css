@@ -449,6 +449,8 @@ body.theme-dark .logo-box {
     height: 100vh;
     background-color: #0b0e14;
     overflow: hidden;
+    margin-top: -50vh; /* Moved up by 50% of viewport to overlap the previous section */
+    z-index: 5;        /* Sits below the pinned hero content overlay if needed, or above the base */
 }
 
 .city-bg-container {
