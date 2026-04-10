@@ -30,7 +30,6 @@ document.addEventListener('DOMContentLoaded', () => {
     initHeroScrollAnimation();
     initConstructionScene(); // Run FIRST so worker DOM nodes exist
     initNameRevealAnimation();
-    initCityRevealAnimation();
 });
 
 // ── Hero: scatter → SVG rounded-triangle shrinks from corners → reveals name-reveal below ──
@@ -138,8 +137,6 @@ function initNameRevealAnimation() {
     ]);
 
     ready.then(() => {
-        // Content is now inside #hero's .name-reveal-content-overlay (z-index 4),
-        // above the clip layer, so it's never masked by the triangle.
         const hero = document.getElementById('hero');
         if (!hero) return;
 
@@ -148,14 +145,14 @@ function initNameRevealAnimation() {
         const imgContainer  = hero.querySelector('.name-reveal-image-container');
         const floats        = hero.querySelectorAll('.float-item');
         const desc          = hero.querySelector('.text-description');
+        const cityBg        = hero.querySelector('.city-bg-container');
 
-        // No clip-path on name-reveal — it sits fully below the hero
-        // The hero's SVG triangle clip reveals MORE of this section as it shrinks
-        // Content starts hidden, waves in mid-way through the hero collapse
+        // Initial states
         gsap.set(imgContainer,  { scale: 0.7, yPercent: 40, opacity: 0 });
         gsap.set(topLetters,    { yPercent: 105 });
         gsap.set(bottomLetters, { yPercent: 105 });
         gsap.set([floats, desc],{ opacity: 0, y: 20 });
+        gsap.set(cityBg,        { opacity: 0, y: 50 });
 
         // scrub matches hero (0.8) for frame-perfect sync
         const tl = gsap.timeline({
@@ -169,7 +166,6 @@ function initNameRevealAnimation() {
         });
 
         // ── Hold while hero scatter plays (hero Phase A+B = 1.4s) ──
-        // Nothing visible yet — triangle is still large, corners just starting to appear
         tl.to({}, { duration: 1.4 });
 
         // ── 1.4s: Triangle starts collapsing → content rises simultaneously ──
@@ -194,12 +190,14 @@ function initNameRevealAnimation() {
         }, 2.0);
 
         // Bottom text "DevOps Engineer" — starts early so it's fully revealed
-        // before the mask finishes collapsing (mask ends at hero t=3.4)
         tl.to(bottomLetters, {
             yPercent: 0,
             stagger: { each: 0.02, from: 'start' },
             duration: 0.5, ease: 'power3.out',
         }, 1.5);
+
+        // City Background reveal
+        tl.to(cityBg, { opacity: 1, y: 0, duration: 1.5, ease: 'power2.out' }, 2.4);
 
         // Subtle upward parallax drift as triangle fully closes
         tl.to(imgContainer,  { yPercent: -4, duration: 1.2 }, 2.8);
@@ -209,29 +207,6 @@ function initNameRevealAnimation() {
         ScrollTrigger.sort();
     });
 }
-
-function initCityRevealAnimation() {
-    const section = document.getElementById('pixel-city-scene');
-    if (!section) return;
-
-    const bg = section.querySelector('.city-static-bg');
-
-    gsap.fromTo(bg, 
-        { yPercent: 20, scale: 1.1 },
-        {
-            yPercent: -10,
-            scale: 1,
-            ease: 'none',
-            scrollTrigger: {
-                trigger: section,
-                start: 'top bottom',
-                end: 'bottom top',
-                scrub: true,
-            }
-        }
-    );
-}
-
 
 // ── Construction Scene: Worker Sprites ──
 function initConstructionScene() {

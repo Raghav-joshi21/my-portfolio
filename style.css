@@ -8,11 +8,12 @@
     --text-light: #000000;
     --bg-dark: #000000;
     --text-dark: #ffffff;
-    --accent: #6c5dd3; /* Purple from Bettina's menu */
+    --accent: #6c5dd3;
+    /* Purple from Bettina's menu */
     --accent-blue: #007aff;
     --nav-height: 100px;
-    --transition-theme: background-color 1s cubic-bezier(0.16, 1, 0.3, 1), 
-                       color 1s cubic-bezier(0.16, 1, 0.3, 1);
+    --transition-theme: background-color 1s cubic-bezier(0.16, 1, 0.3, 1),
+        color 1s cubic-bezier(0.16, 1, 0.3, 1);
     --transition-smooth: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -41,7 +42,10 @@ body.theme-dark {
     color: var(--text-dark);
 }
 
-h1, h2, h3, .logo-box {
+h1,
+h2,
+h3,
+.logo-box {
     font-family: 'Outfit', sans-serif;
     font-weight: 700;
 }
@@ -168,10 +172,12 @@ body.theme-dark .logo-box {
 /* ── Hero Section — scroll dismantling animation ── */
 .hero-section {
     height: 100vh;
-    background: #000;           /* Black bg — revealed in corners as white clip layer shrinks */
+    background: #000;
+    /* Black bg — revealed in corners as white clip layer shrinks */
     position: relative;
     overflow: hidden;
-    z-index: 200;               /* ON TOP of name-reveal (z-index: 100) */
+    z-index: 200;
+    /* ON TOP of name-reveal (z-index: 100) */
 }
 
 /* White panel that covers the hero.
@@ -188,14 +194,14 @@ body.theme-dark .logo-box {
     /* Upward-pointing triangle SVG mask, centered, no-repeat */
     --mask-scale: 3.5;
     -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath fill='white' d='M50,3 L97,92 Q98,98 91,98 L9,98 Q2,98 3,92 Z'/%3E%3C/svg%3E");
-            mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath fill='white' d='M50,3 L97,92 Q98,98 91,98 L9,98 Q2,98 3,92 Z'/%3E%3C/svg%3E");
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath fill='white' d='M50,3 L97,92 Q98,98 91,98 L9,98 Q2,98 3,92 Z'/%3E%3C/svg%3E");
     -webkit-mask-position: 50% 50%;
-            mask-position: 50% 50%;
+    mask-position: 50% 50%;
     -webkit-mask-repeat: no-repeat;
-            mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
     /* Size = max viewport dimension × scale → large triangle covers full screen at 3.5 */
     -webkit-mask-size: calc(max(100vw, 100vh) * var(--mask-scale));
-            mask-size: calc(max(100vw, 100vh) * var(--mask-scale));
+    mask-size: calc(max(100vw, 100vh) * var(--mask-scale));
 }
 
 /* Image + text sit ABOVE the clip layer — never affected by the triangle clip-path.
@@ -268,14 +274,14 @@ body.theme-dark .logo-box {
     font-size: 1.1rem;
     color: #111;
     opacity: 0.55;
-    z-index: 5;                 /* above content overlay (z-index 4) */
+    z-index: 5;
+    /* above content overlay (z-index 4) */
     font-family: 'Plus Jakarta Sans', sans-serif;
 }
 
 /* ── Name Reveal Section ── */
 .name-reveal-section {
-    height: 100vh;
-    background-color: #000;
+    background-color: #000; /* Solid black backdrop to hide the light hero background */
     position: relative;
     overflow: hidden;
     color: #fff;
@@ -286,8 +292,36 @@ body.theme-dark .logo-box {
     z-index: 100;    /* sits BELOW hero — revealed in corners as hero's triangle shrinks */
 }
 
+.city-bg-container {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 50vh;   /* takes up the bottom portion of the viewport */
+    z-index: 1;     /* sits ABOVE lead black, but BELOW lead content (text/image) */
+    opacity: 0;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.city-static-bg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center bottom;
+    image-rendering: pixelated;
+}
+
+.city-overlay-vignette {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 60%);
+    z-index: 2;
+}
+
 .name-reveal-bg-pattern {
-    display: none; /* Video doesn't have the grid */
+    display: none;
+    /* Video doesn't have the grid */
 }
 
 /* Global section fade to ground the bottom text reveal */
@@ -308,11 +342,13 @@ body.theme-dark .logo-box {
     width: 100%;
     overflow: hidden;
     pointer-events: none;
-    z-index: 5; /* Text on top of image as per video */
+    z-index: 5;
+    /* Text on top of image as per video */
 }
 
 .top-text-mask {
-    top: 15vh; /* Lifted up by 5% from 20vh */
+    top: 15vh;
+    /* Lifted up by 5% from 20vh */
     height: 20vh;
     display: flex;
     align-items: flex-end;
@@ -320,10 +356,13 @@ body.theme-dark .logo-box {
 }
 
 .bottom-text-mask {
-    bottom: 8vh; /* Final 2% nudge down from 10vh */
-    height: 15vh; /* Tighter mask to guarantee total hide at 100% offset */
+    bottom: 8vh;
+    /* Final 2% nudge down from 10vh */
+    height: 15vh;
+    /* Tighter mask to guarantee total hide at 100% offset */
     display: flex;
-    align-items: flex-end; /* Text rises UP from the background */
+    align-items: flex-end;
+    /* Text rises UP from the background */
     overflow: hidden;
 }
 
@@ -331,7 +370,8 @@ body.theme-dark .logo-box {
     width: 100%;
     text-align: center;
     white-space: nowrap;
-    letter-spacing: -2px; /* Adjusted for smaller font size */
+    letter-spacing: -2px;
+    /* Adjusted for smaller font size */
     display: flex;
     justify-content: center;
     color: #fff;
@@ -346,7 +386,8 @@ body.theme-dark .logo-box {
 }
 
 .name-bg-text.bottom-text {
-    font-size: clamp(2rem, 7vw, 7.5rem); /* Reduced 40% more than top */
+    font-size: clamp(2rem, 7vw, 7.5rem);
+    /* Reduced 40% more than top */
     text-transform: uppercase;
     line-height: 0.8;
 }
@@ -358,7 +399,8 @@ body.theme-dark .logo-box {
 
 .name-reveal-image-container {
     position: absolute;
-    top: 75%; /* Shifted down by 10% from 65% */
+    top: 75%;
+    /* Shifted down by 10% from 65% */
     left: 50%;
     transform: translate(-50%, -50%);
     z-index: 2;
@@ -370,7 +412,7 @@ body.theme-dark .logo-box {
     height: 100%;
     width: auto;
     object-fit: contain;
-    filter: drop-shadow(0 0 50px rgba(0,0,0,1));
+    filter: drop-shadow(0 0 50px rgba(0, 0, 0, 1));
     transform-origin: bottom center;
 }
 
@@ -381,7 +423,7 @@ body.theme-dark .logo-box {
     left: 0;
     width: 100%;
     height: 45%;
-    background: linear-gradient(to top, #000 30%, rgba(0,0,0,0.6) 60%, transparent 100%);
+    background: linear-gradient(to top, #000 30%, rgba(0, 0, 0, 0.6) 60%, transparent 100%);
     pointer-events: none;
 }
 
@@ -393,19 +435,32 @@ body.theme-dark .logo-box {
     pointer-events: none;
 }
 
-.float-1 { top: 75%; left: 15%; }
-.float-3 { top: 85%; left: 30%; }
-.float-5 { top: 85%; left: 65%; }
+.float-1 {
+    top: 75%;
+    left: 15%;
+}
+
+.float-3 {
+    top: 85%;
+    left: 30%;
+}
+
+.float-5 {
+    top: 85%;
+    left: 65%;
+}
 
 .text-description {
-    top: 55%; /* Moved down from 45% to clear huge typography */
+    top: 55%;
+    /* Moved down from 45% to clear huge typography */
     left: 65%;
     font-family: 'Inter', sans-serif;
     font-size: 1rem;
     font-weight: 700;
     line-height: 1.2;
     text-transform: uppercase;
-    color: #9fc7ff; /* Custom Technical Blue requested */
+    color: #9fc7ff;
+    /* Custom Technical Blue requested */
     letter-spacing: 1px;
     max-width: 320px;
 }
@@ -415,43 +470,111 @@ body.theme-dark .logo-box {
     position: absolute;
     font-weight: 700;
     letter-spacing: 2px;
-    color: #fff; /* Default to white unless overridden */
+    color: #fff;
+    /* Default to white unless overridden */
     font-size: 0.8rem;
     text-transform: uppercase;
     opacity: 0.8;
 }
 
-.float-1 { top: 65%; left: 30%; }
-.float-3 { top: 75%; left: 65%; }
-.float-5 { top: 55%; left: 75%; }
+.float-1 {
+    top: 65%;
+    left: 30%;
+}
+
+.float-3 {
+    top: 75%;
+    left: 65%;
+}
+
+.float-5 {
+    top: 55%;
+    left: 75%;
+}
 
 .fly-item {
-    display: none; /* Video doesn't use the fly past items */
+    display: none;
+    /* Video doesn't use the fly past items */
 }
 
-.fly-1 { top: 25%; left: 15%; font-size: 1.2rem; }
-.fly-2 { top: 60%; left: 75%; font-size: 1.4rem; color: #9fc7ff; }
-.fly-3 { top: 40%; left: 70%; font-size: 1.1rem; }
-.fly-4 { top: 80%; left: 25%; font-size: 1.3rem; }
-.fly-5 { top: 20%; left: 60%; font-size: 1.2rem; }
-.fly-6 { top: 50%; left: 10%; font-size: 1.4rem; }
-
-.float-1 { top: 40%; left: 27%; font-size: 0.9rem; color: #9fc7ff; }
-.float-3 { top: 78%; left: 16%; font-size: 0.9rem; color: #fff; }
-.float-5 { top: 78%; left: 60%; font-size: 0.9rem; color: #fff; }
-.float-6 { top: 55%; left: 25%; font-size: 0.9rem; color: #fff; }         /* CI CD PIPELINES */
-.float-7 { top: 68%; left: auto; right: 3%; font-size: 0.9rem; color: #9fc7ff; } /* AI AGENTS — far right */
-
-/* ── Pixel City Scene Section ── */
-.city-scene-section {
-    position: relative;
-    width: 100%;
-    height: 100vh;
-    background-color: #0b0e14;
-    overflow: hidden;
-    margin-top: -50vh; /* Moved up by 50% of viewport to overlap the previous section */
-    z-index: 5;        /* Sits below the pinned hero content overlay if needed, or above the base */
+.fly-1 {
+    top: 25%;
+    left: 15%;
+    font-size: 1.2rem;
 }
+
+.fly-2 {
+    top: 60%;
+    left: 75%;
+    font-size: 1.4rem;
+    color: #9fc7ff;
+}
+
+.fly-3 {
+    top: 40%;
+    left: 70%;
+    font-size: 1.1rem;
+}
+
+.fly-4 {
+    top: 80%;
+    left: 25%;
+    font-size: 1.3rem;
+}
+
+.fly-5 {
+    top: 20%;
+    left: 60%;
+    font-size: 1.2rem;
+}
+
+.fly-6 {
+    top: 50%;
+    left: 10%;
+    font-size: 1.4rem;
+}
+
+.float-1 {
+    top: 40%;
+    left: 27%;
+    font-size: 0.9rem;
+    color: #9fc7ff;
+}
+
+.float-3 {
+    top: 78%;
+    left: 16%;
+    font-size: 0.9rem;
+    color: #fff;
+}
+
+.float-5 {
+    top: 78%;
+    left: 60%;
+    font-size: 0.9rem;
+    color: #fff;
+}
+
+.float-6 {
+    top: 55%;
+    left: 25%;
+    font-size: 0.9rem;
+    color: #fff;
+}
+
+/* CI CD PIPELINES */
+.float-7 {
+    top: 68%;
+    left: auto;
+    right: 3%;
+    font-size: 0.9rem;
+    color: #9fc7ff;
+}
+
+/* AI AGENTS — far right */
+
+/* ── Pixel City Scene (Internal to Name Reveal) ── */
+/* Handled via .city-bg-container above */
 
 .city-bg-container {
     position: absolute;
@@ -464,7 +587,8 @@ body.theme-dark .logo-box {
     height: 100%;
     object-fit: cover;
     object-position: center;
-    image-rendering: pixelated; /* Essential for pixel art clarity */
+    image-rendering: pixelated;
+    /* Essential for pixel art clarity */
 }
 
 /* Atmospheric vignette to match the cinematic feel */
@@ -472,7 +596,7 @@ body.theme-dark .logo-box {
     content: '';
     position: absolute;
     inset: 0;
-    background: radial-gradient(circle at center, transparent 30%, rgba(0,0,0,0.6) 100%);
+    background: radial-gradient(circle at center, transparent 30%, rgba(0, 0, 0, 0.6) 100%);
     z-index: 2;
     pointer-events: none;
 }
@@ -491,71 +615,253 @@ body.theme-dark .logo-box {
 /* ═══════════════════════════════════════
    Construction Scene Styles (cs- prefix)
 ═══════════════════════════════════════ */
-.construction-reveal-wrapper { background:#000; overflow:hidden; }
+.construction-reveal-wrapper {
+    background: #000;
+    overflow: hidden;
+    display: none;
+}
+
 .construction-scene-section {
-    position:relative; width:100%; height:100vh;
-    overflow:hidden; background-color:#0b0e14; will-change:transform;
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+    background-color: #0b0e14;
+    will-change: transform;
 }
+
 .cs-bg {
-    position:absolute; top:0; left:0; width:100%; height:100%;
-    object-fit:cover; object-position:bottom center; z-index:1; image-rendering:pixelated;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: bottom center;
+    z-index: 1;
+    image-rendering: pixelated;
 }
+
 .cs-ui-layer {
-    position:absolute; top:0; left:0; width:100%; height:100%;
-    z-index:10; padding:1.5rem 5rem; pointer-events:none; display:flex; align-items:flex-start;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10;
+    padding: 1.5rem 5rem;
+    pointer-events: none;
+    display: flex;
+    align-items: flex-start;
 }
-.cs-hero-text { pointer-events:auto; width:100%; display:flex; flex-direction:column; align-items:flex-start; }
-.cs-hero-left { width:100%; }
-.cs-below-heading { margin-top:7rem; display:flex; flex-direction:column; gap:0.5rem; max-width:520px; }
+
+.cs-hero-text {
+    pointer-events: auto;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.cs-hero-left {
+    width: 100%;
+}
+
+.cs-below-heading {
+    margin-top: 7rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    max-width: 520px;
+}
+
 .cs-heading {
-    font-family:'Pixelify Sans','Archivo Black',cursive;
-    font-size:clamp(2.5rem,4.5vw,5.5rem);
-    line-height:1.1; font-weight:700; letter-spacing:-0.02em; color:#fff; white-space:nowrap;
+    font-family: 'Pixelify Sans', 'Archivo Black', cursive;
+    font-size: clamp(2.5rem, 4.5vw, 5.5rem);
+    line-height: 1.1;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: #fff;
+    white-space: nowrap;
 }
-.cs-highlight     { color:#f8c537; }
-.cs-highlight-alt { color:#8b5cf6; }
+
+.cs-highlight {
+    color: #f8c537;
+}
+
+.cs-highlight-alt {
+    color: #8b5cf6;
+}
+
 .cs-myself {
-    position:absolute; font-family:'Caveat',cursive; font-size:4rem;
-    font-weight:700; color:#f8c537; transform:rotate(-12deg); top:80px; left:0; white-space:nowrap;
+    position: absolute;
+    font-family: 'Caveat', cursive;
+    font-size: 4rem;
+    font-weight: 700;
+    color: #f8c537;
+    transform: rotate(-12deg);
+    top: 80px;
+    left: 0;
+    white-space: nowrap;
 }
-.cs-subtitle { font-family:'Inter',sans-serif; font-size:1.15rem; line-height:1.5; color:rgba(255,255,255,0.8); margin-bottom:1rem; }
+
+.cs-subtitle {
+    font-family: 'Inter', sans-serif;
+    font-size: 1.15rem;
+    line-height: 1.5;
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 1rem;
+}
+
 .cs-console {
-    background:#1e1e2e; border:1px solid #45475a; border-radius:8px; padding:1rem;
-    font-family:monospace; font-size:1rem; color:#a6e3a1; margin-bottom:1rem;
-    display:inline-block; min-width:320px; box-shadow:0 10px 30px rgba(0,0,0,0.5);
+    background: #1e1e2e;
+    border: 1px solid #45475a;
+    border-radius: 8px;
+    padding: 1rem;
+    font-family: monospace;
+    font-size: 1rem;
+    color: #a6e3a1;
+    margin-bottom: 1rem;
+    display: inline-block;
+    min-width: 320px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
 }
-.cs-console-header { color:#fff; margin-bottom:0.5rem; }
+
+.cs-console-header {
+    color: #fff;
+    margin-bottom: 0.5rem;
+}
+
 .cs-cursor {
-    display:inline-block; width:10px; height:1rem; background:#fff;
-    animation:cs-blink 1s step-end infinite; vertical-align:sub; margin-left:5px;
+    display: inline-block;
+    width: 10px;
+    height: 1rem;
+    background: #fff;
+    animation: cs-blink 1s step-end infinite;
+    vertical-align: sub;
+    margin-left: 5px;
 }
-@keyframes cs-blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+@keyframes cs-blink {
+
+    0%,
+    100% {
+        opacity: 1
+    }
+
+    50% {
+        opacity: 0
+    }
+}
+
 .cs-btn {
-    display:inline-block; background:#5c5cff; color:#fff; border:none; border-radius:8px;
-    padding:0.75rem 1.5rem; font-family:'Inter',sans-serif; font-size:1rem; font-weight:600;
-    cursor:pointer; text-decoration:none; transition:all 0.2s ease;
-    box-shadow:0 4px 15px rgba(92,92,255,0.4); pointer-events:auto;
+    display: inline-block;
+    background: #5c5cff;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 0.75rem 1.5rem;
+    font-family: 'Inter', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 15px rgba(92, 92, 255, 0.4);
+    pointer-events: auto;
 }
-.cs-btn:hover { background:#4a4ae6; transform:translateY(-2px); box-shadow:0 6px 20px rgba(92,92,255,0.6); }
-.cs-construction-layer { position:absolute; bottom:0; left:0; width:100%; height:100%; z-index:5; pointer-events:none; }
+
+.cs-btn:hover {
+    background: #4a4ae6;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(92, 92, 255, 0.6);
+}
+
+.cs-construction-layer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 5;
+    pointer-events: none;
+}
+
 .cs-base-left {
-    position:absolute; bottom:-1.9rem; left:0; height:100vh; width:auto;
-    image-rendering:pixelated; pointer-events:none; z-index:5;
-    transform:translate(-9rem,8rem); will-change:transform;
+    position: absolute;
+    bottom: -1.9rem;
+    left: 0;
+    height: 100vh;
+    width: auto;
+    image-rendering: pixelated;
+    pointer-events: none;
+    z-index: 5;
+    transform: translate(-9rem, 8rem);
+    will-change: transform;
 }
+
 .cs-building {
-    position:absolute; bottom:0; right:1vw; height:85vh; width:auto;
-    image-rendering:pixelated; pointer-events:none; clip-path:inset(9px); z-index:2;
+    position: absolute;
+    bottom: 0;
+    right: 1vw;
+    height: 85vh;
+    width: auto;
+    image-rendering: pixelated;
+    pointer-events: none;
+    clip-path: inset(9px);
+    z-index: 2;
 }
+
 .cs-crane {
-    position:absolute; bottom:0; right:-9vw; height:102vh; width:auto;
-    image-rendering:pixelated; pointer-events:none; clip-path:inset(2px); z-index:4;
-    transform-origin:85% 100%; animation:cs-crane-sway 12s ease-in-out infinite; will-change:transform;
+    position: absolute;
+    bottom: 0;
+    right: -9vw;
+    height: 102vh;
+    width: auto;
+    image-rendering: pixelated;
+    pointer-events: none;
+    clip-path: inset(2px);
+    z-index: 4;
+    transform-origin: 85% 100%;
+    animation: cs-crane-sway 12s ease-in-out infinite;
+    will-change: transform;
 }
-@keyframes cs-crane-sway { 0%{transform:rotate(0deg)} 40%{transform:rotate(1.5deg)} 70%{transform:rotate(-0.5deg)} 100%{transform:rotate(0deg)} }
-#cs-trees-container { position:absolute; bottom:5vh; left:0; width:100%; height:auto; }
-.cs-tree { position:absolute; bottom:0; image-rendering:pixelated; }
-.cs-worker-container { position:absolute; }
+
+@keyframes cs-crane-sway {
+    0% {
+        transform: rotate(0deg)
+    }
+
+    40% {
+        transform: rotate(1.5deg)
+    }
+
+    70% {
+        transform: rotate(-0.5deg)
+    }
+
+    100% {
+        transform: rotate(0deg)
+    }
+}
+
+#cs-trees-container {
+    position: absolute;
+    bottom: 5vh;
+    left: 0;
+    width: 100%;
+    height: auto;
+}
+
+.cs-tree {
+    position: absolute;
+    bottom: 0;
+    image-rendering: pixelated;
+}
+
+.cs-worker-container {
+    position: absolute;
+}
 
 
 /* About Section */
@@ -567,7 +873,8 @@ body.theme-dark .logo-box {
 .about-me-circle {
     width: 180px;
     height: 180px;
-    background-color: #ef4444; /* Bright Red from Bettina's site */
+    background-color: #ef4444;
+    /* Bright Red from Bettina's site */
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -678,7 +985,8 @@ body.theme-dark .logo-box {
     left: 0;
     width: 100%;
     height: 200%;
-    background-color: var(--accent); /* Purple fill */
+    background-color: var(--accent);
+    /* Purple fill */
     transition: transform 0.6s cubic-bezier(0.76, 0, 0.24, 1);
     border-radius: 50%;
 }
@@ -693,7 +1001,15 @@ body.theme-dark .logo-box {
 
 /* Responsive adjustments */
 @media (max-width: 1024px) {
-    .container { padding: 0 2rem; }
-    .main-nav { padding: 0 2rem; }
-    .hero-section { padding-left: 5vw; }
+    .container {
+        padding: 0 2rem;
+    }
+
+    .main-nav {
+        padding: 0 2rem;
+    }
+
+    .hero-section {
+        padding-left: 5vw;
+    }
 }
